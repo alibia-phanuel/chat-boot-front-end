@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { LoginUser, reset } from "../src/feature/authSlice";
 import { AppDispatch, RootState } from "../src/stores/store";
 import { useDispatch, useSelector } from "react-redux";
+import bigLogo from "../public/assets/big-logo.png";
+import Logo from "../public/assets/logo.png";
 import { useNavigate } from "react-router-dom";
 const Login = () => {
   // Définition des états avec types
@@ -29,7 +31,7 @@ const Login = () => {
     <section className="min-h-screen w-full  flex items-center justify-center px-4">
       <div className="container flex bg-yellow-400 px-4 justify-around items-center p rounded-lg py-[100px] shadow">
         <div className="w-[50%] max-md:hidden">
-          <img src="../src/assets/big-logo.png" alt="grand Logo" />
+          <img src={bigLogo} alt="grand Logo" />
         </div>
 
         <div className="flex justify-center min-w-[700px] max-md:min-w-[100%] ">
@@ -40,7 +42,7 @@ const Login = () => {
             >
               <div className=" flex flex-col items-center">
                 <div className="w-[100px] h-[100px] rounded-full overflow-hidden  border-2 border-red-500 p-3">
-                  <img src="../src/assets/logo.png" alt="Logo" />
+                  <img src={Logo} alt="Logo" />
                 </div>
                 <div className="flex flex-col items-center mb-8">
                   <h1 className="text-[30px] my-2 font-semibold text-xl ">
