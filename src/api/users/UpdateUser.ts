@@ -1,7 +1,5 @@
 import axios, { AxiosError } from "axios";
 
-const API_URL = "https://chat-boot-92e040193633.herokuapp.com/users"; // Remplace par ton URL backend
-
 export interface UpdateUserData {
   name?: string;
   email?: string;
@@ -9,8 +7,9 @@ export interface UpdateUserData {
 }
 
 export const updateUser = async (uuid: string, data: UpdateUserData) => {
+  const baseURL = "https://chat-boot-92e040193633.herokuapp.com";
   try {
-    const response = await axios.patch(`${API_URL}/${uuid}`, data, {
+    const response = await axios.patch(`${baseURL}/${uuid}`, data, {
       withCredentials: true, // Si ton backend utilise des cookies pour l'auth
     });
     return response.data;

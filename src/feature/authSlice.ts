@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
+// Récupération de l'URL de base depuis l'environnement
+const baseURL = "https://chat-boot-92e040193633.herokuapp.com";
 /**
  * Définition de l'interface représentant les données utilisateur après connexion.
  */
@@ -46,13 +48,10 @@ export const LoginUser = createAsyncThunk(
   ) => {
     try {
       // Envoi de la requête de connexion avec les informations de l'utilisateur
-      const response = await axios.post<User>(
-        "https://chat-boot-92e040193633.herokuapp.com/login",
-        {
-          email: user.email,
-          password: user.password,
-        }
-      );
+      const response = await axios.post<User>(`${baseURL}/login`, {
+        email: user.email,
+        password: user.password,
+      });
 
       // Retourne les données de l'utilisateur en cas de succès
       return response.data;
@@ -79,9 +78,7 @@ export const getMe = createAsyncThunk<User, void, { rejectValue: string }>(
   "user/getMe",
   async (_, thunkAPI) => {
     try {
-      const response = await axios.get<User>(
-        "https://chat-boot-92e040193633.herokuapp.com/me"
-      );
+      const response = await axios.get<User>(`${baseURL}/me`);
 
       // Si la requête réussit, retourne les données de l'utilisateur
       return response.data;
@@ -110,7 +107,7 @@ export const LogOut = createAsyncThunk<void, void, { rejectValue: string }>(
   "user/LogOut",
   async (_, thunkAPI) => {
     try {
-      await axios.delete("https://chat-boot-92e040193633.herokuapp.com/logout");
+      await axios.delete(`${baseURL}/logout`);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const message =

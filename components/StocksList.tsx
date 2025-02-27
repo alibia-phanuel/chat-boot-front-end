@@ -1,12 +1,11 @@
 import LayoutSystem from "./share/LayoutSystem";
-const Welcome = () => {
+const StocksList = () => {
   return (
     <LayoutSystem>
       <div className="text-center  h-full flex justify-center items-center">
-        <h1 className="text-3xl font-bold underline">Bienvenue sur le site </h1>
+        Gestion des stocks
       </div>
     </LayoutSystem>
   );
 };
-
-export default Welcome;
+export default StocksList;

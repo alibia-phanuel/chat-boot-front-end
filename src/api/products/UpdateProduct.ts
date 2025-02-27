@@ -1,15 +1,13 @@
 import axios, { AxiosError } from "axios";
-
-const API_URL = "https://chat-boot-92e040193633.herokuapp.com/products"; // Remplace par ton URL backend
-
 export interface UpdateProductData {
   name?: string;
   price?: number;
 }
 
 export const updateProduct = async (uuid: string, data: UpdateProductData) => {
+  const baseURL = "https://chat-boot-92e040193633.herokuapp.com";
   try {
-    const response = await axios.patch(`${API_URL}/${uuid}`, data, {
+    const response = await axios.patch(`${baseURL}/${uuid}`, data, {
       withCredentials: true, // Si ton backend utilise des cookies pour l'auth
     });
     return response.data;
