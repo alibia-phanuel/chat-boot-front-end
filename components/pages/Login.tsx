@@ -3,7 +3,6 @@ import { LoginUser, reset } from "../../src/feature/authSlice";
 import { AppDispatch, RootState } from "../../src/stores/store";
 import { useDispatch, useSelector } from "react-redux";
 import bigLogo from "../../public/assets/big-logo.png";
-
 import "react-toastify/dist/ReactToastify.css";
 import Logo from "../../public/assets/logo.png";
 import { useNavigate } from "react-router-dom";
@@ -17,11 +16,11 @@ const Login = () => {
     (state: RootState) => state.auth
   );
   useEffect(() => {
-    if (isSuccess && user?.name) {
+    if (user || isSuccess) {
       navigate("/dashboard");
-      dispatch(reset()); // Réinitialiser l'état après la connexion
     }
-  }, [isSuccess, user?.name, dispatch, navigate]);
+    dispatch(reset());
+  }, [user, isSuccess, dispatch, navigate]);
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Maintenant, tu peux utiliser `email` et `password` ici
