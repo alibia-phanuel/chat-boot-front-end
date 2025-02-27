@@ -17,12 +17,12 @@ const Login = () => {
     (state: RootState) => state.auth
   );
   useEffect(() => {
-    if (user || isSuccess) {
+    if (isSuccess && user?.name) {
+      toast.success(`Bienvenue, ${user.name} !`);
       navigate("/dashboard");
-      toast.success(`Bienvenue, ${user?.name} !`);
+      dispatch(reset()); // Réinitialiser l'état après la connexion
     }
-    dispatch(reset());
-  }, [user, isSuccess, dispatch, navigate]);
+  }, [isSuccess, user?.name, dispatch, navigate]);
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Maintenant, tu peux utiliser `email` et `password` ici
