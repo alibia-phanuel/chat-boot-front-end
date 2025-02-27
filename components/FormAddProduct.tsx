@@ -28,11 +28,10 @@ const FormAddProduct = () => {
     try {
       const response = await axios.post(
         "https://chat-boot-92e040193633.herokuapp.com/products",
-        { name, price: Number(priceStr) } // Convertir price en number
+        { name, price: Number(priceStr) } // Convertir price en snumber
       );
 
       toast.success(response.data.msg || "Produit ajouté avec succès !");
-
       // Réinitialiser les champs après succès
       setName("");
       setPrice("");

@@ -9,7 +9,7 @@ export interface UpdateUserData {
 export const updateUser = async (uuid: string, data: UpdateUserData) => {
   const baseURL = "https://chat-boot-92e040193633.herokuapp.com";
   try {
-    const response = await axios.patch(`${baseURL}/${uuid}`, data, {
+    const response = await axios.patch(`${baseURL}/users/${uuid}`, data, {
       withCredentials: true, // Si ton backend utilise des cookies pour l'auth
     });
     return response.data;

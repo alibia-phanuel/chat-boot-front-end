@@ -55,7 +55,6 @@ const SideBar = () => {
               <FaBox /> <span>Produits</span>
             </NavLink>
           </li>
-
           <li className="px-6 my-2">
             <NavLink
               to="/questionsreponses"
@@ -115,7 +114,6 @@ const SideBar = () => {
             </ul>
           </div>
         )}
-
         {/* Settings Section */}
         <p className="text-gray-600 font-semibold mt-4 mb-2 py-2 px-4">
           Paramètres

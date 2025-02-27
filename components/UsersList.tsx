@@ -56,7 +56,7 @@ const UsersList = () => {
   if (loading)
     return (
       <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-red-500"></div>
       </div>
     );
 
@@ -103,7 +103,7 @@ const UsersList = () => {
                 <td className="px-6 py-4 whitespace-nowrap space-x-2">
                   <Link
                     to={`/users/edit/${user.uuid}`}
-                    className="inline-block px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600"
+                    className="inline-block px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-500"
                   >
                     Editer
                   </Link>

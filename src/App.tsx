@@ -2,41 +2,44 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "../components/pages/Login";
-import Dashbord from "../components/pages/Dashbord";
-import Products from "../components/pages/Products";
-import QuestionsReponses from "../components/pages/QuestionsReponses";
-import Stocks from "../components/pages/Stocks";
+// Action lier au utilisateurs
 import Users from "../components/pages/Users";
-import Chatboot from "../components/pages/Chatboot";
-import Message from "../components/pages/Message";
 import FormEditeUser from "../components/FormEditeUser";
 import FormAddUser from "../components/FormAddUser";
-import FormAddProduct from "../components/FormAddProduct";
+// FIN: Action lier au utilisateurs----
+// Action lier au produits
+import Products from "../components/pages/Products";
 import FormEditeProduct from "../components/FormEditeProduct";
+import FormAddProduct from "../components/FormAddProduct";
+// FIN: Action lier au produits----
+
+import QuestionsReponses from "../components/pages/QuestionsReponses";
+import Stocks from "../components/pages/Stocks";
+import Login from "../components/pages/Login";
+import Dashbord from "../components/pages/Dashbord";
+import Chatboot from "../components/pages/Chatboot";
+import Message from "../components/pages/Message";
 function App() {
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/dashboard" element={<Dashbord />}></Route>
-          <Route path="/" element={<Login />}></Route>"from"
-          <Route path="/products" element={<Products />}></Route>
-          <Route path="/Stocks" element={<Stocks />}></Route>
-          <Route
-            path="/questionsreponses"
-            element={<QuestionsReponses />}
-          ></Route>
-          <Route path="/Chatboot" element={<Chatboot />}></Route>
-          <Route path="/Message" element={<Message />}></Route>
-          <Route path="/users" element={<Users />}></Route>
-          <Route path="/users/add" element={<FormAddUser />}></Route>
-          <Route path="/users/edit/:id" element={<FormEditeUser />}></Route>
-          <Route path="/products/add" element={<FormAddProduct />}></Route>
-          <Route
-            path="/products/edite/:id"
-            element={<FormEditeProduct />}
-          ></Route>
+          {/* Route lier au utilisateurs */}
+          <Route path="/users" element={<Users />} />
+          <Route path="/users/add" element={<FormAddUser />} />
+          <Route path="`/users/edit/:id" element={<FormEditeUser />} />
+          {/* Route lier au produits */}
+          <Route path="/products" element={<Products />} />
+          <Route path="/products/add" element={<FormAddProduct />} />
+          <Route path="/products/edit/:id" element={<FormEditeProduct />} />
+          {/**Route lier au message (automatique) */}
+          <Route path="/questionsreponses" element={<QuestionsReponses />} />
+          {/* AUTRE */}
+          <Route path="/" element={<Login />}></Route>
+          <Route path="/dashboard" element={<Dashbord />} />
+          <Route path="/Stocks" element={<Stocks />} />
+          <Route path="/Message" element={<Message />} />
+          <Route path="/Chatboot" element={<Chatboot />} />
         </Routes>
       </BrowserRouter>
       <ToastContainer />
