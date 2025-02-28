@@ -2,6 +2,7 @@ import LayoutSystem from "./share/LayoutSystem";
 import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import Layout from "./pages/Layout";
 import "react-toastify/dist/ReactToastify.css";
 const FormAddProduct = () => {
   // États pour chaque champ du formulaire
@@ -27,7 +28,7 @@ const FormAddProduct = () => {
 
     try {
       const response = await axios.post(
-        "https://chat-boot-92e040193633.herokuapp.com/products",
+        "http://localhost:4000/products",
         { name, price: Number(priceStr) } // Convertir price en snumber
       );
 
@@ -41,52 +42,56 @@ const FormAddProduct = () => {
     }
   };
   return (
-    <LayoutSystem>
-      <div className="p-6 max-w-2xl mx-auto">
-        <h1 className="text-2xl font-bold mb-2">Ajouter un nouveau produit </h1>
-        <div className="text-xl text-gray-600 mb-4">
-          Ajouter de nouveaux détails sur le produit
-        </div>
-        <div className="bg-white rounded-lg">
-          <div className="p-4">
-            <form className="space-y-4" onSubmit={handleSubmit}>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Nom du produit
-                </label>
-                <input
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  type="text"
-                  placeholder="Enter product name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </div>
+    <Layout>
+      <LayoutSystem>
+        <div className="p-6 max-w-2xl mx-auto relative shadow-lg top-[15%]">
+          <h1 className="text-2xl font-bold mb-2">
+            Ajouter un nouveau produit{" "}
+          </h1>
+          <div className="text-xl text-gray-600 mb-4">
+            Ajouter de nouveaux détails sur le produit
+          </div>
+          <div className="bg-white rounded-lg">
+            <div className="p-4">
+              <form className="space-y-4" onSubmit={handleSubmit}>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Nom du produit
+                  </label>
+                  <input
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    type="text"
+                    placeholder="Enter product name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Prix du produit
-                </label>
-                <input
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  type="number"
-                  placeholder="Enter product price"
-                  value={price}
-                  onChange={(e) => setPrice(e.target.value)}
-                />
-              </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Prix du produit
+                  </label>
+                  <input
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    type="number"
+                    placeholder="Enter product price"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                  />
+                </div>
 
-              <button
-                type="submit"
-                className="w-full px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
-              >
-                Sauvegarder le produit
-              </button>
-            </form>
+                <button
+                  type="submit"
+                  className="w-full px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
+                >
+                  Sauvegarder le produit
+                </button>
+              </form>
+            </div>
           </div>
         </div>
-      </div>
-    </LayoutSystem>
+      </LayoutSystem>
+    </Layout>
   );
 };
 

@@ -63,70 +63,74 @@ const ProductList = () => {
 
   return (
     <LayoutSystem>
-      <div className="p-6">
-        <h1 className="text-2xl font-bold mb-2">Produits</h1>
-        <h2 className="text-xl text-gray-600 mb-4">Liste des produits</h2>
-        <Link
-          to="/products/add"
-          className="inline-block px-4 py-2 mb-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-        >
-          Ajouter un nouveau
-        </Link>
-        <table className="w-full border-collapse bg-white shadow-sm rounded-lg overflow-hidden">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Non.
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Nom
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Prix
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Auteur
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Rôle
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {products.map((product, index) => (
-              <tr key={product.uuid} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{product.name}</td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {product.price} FCFA
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {product.User.name}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {product.User.role}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap space-x-2">
-                  <Link
-                    to={`/products/edit/${product.uuid}`}
-                    className="inline-block px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600"
-                  >
-                    Editer
-                  </Link>
-                  <button
-                    className="inline-block px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600"
-                    onClick={() => handleDelete(product.uuid)}
-                  >
-                    🗑 Supprimer
-                  </button>
-                </td>
+      <div className="w-full flex justify-center items-center">
+        <div className="p-6 container">
+          <h1 className="text-2xl font-bold mb-2">Produits</h1>
+          <h2 className="text-xl text-gray-600 mb-4">Liste des produits</h2>
+          <Link
+            to="/products/add"
+            className="inline-block px-4 py-2 mb-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+          >
+            Ajouter un nouveau
+          </Link>
+          <table className="w-full border-collapse bg-white shadow-sm rounded-lg overflow-hidden">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  id
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Nom
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Prix
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Auteur
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Rôle
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {products.map((product, index) => (
+                <tr key={product.uuid} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {product.name}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {product.price} FCFA
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {product.User.name}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {product.User.role}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap space-x-2">
+                    <Link
+                      to={`/products/edit/${product.uuid}`}
+                      className="inline-block px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600"
+                    >
+                      Editer
+                    </Link>
+                    <button
+                      className="inline-block px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600"
+                      onClick={() => handleDelete(product.uuid)}
+                    >
+                      🗑 Supprimer
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </LayoutSystem>
   );

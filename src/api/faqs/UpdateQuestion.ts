@@ -1,15 +1,13 @@
 import axios, { AxiosError } from "axios";
-
-export interface UpdateUserData {
+export interface UpdateProductData {
   name?: string;
-  email?: string;
-  role?: string;
+  price?: number;
 }
 
-export const updateUser = async (uuid: string, data: UpdateUserData) => {
+export const updateProduct = async (uuid: string, data: UpdateProductData) => {
   const baseURL = "http://localhost:4000";
   try {
-    const response = await axios.patch(`${baseURL}/users/${uuid}`, data, {
+    const response = await axios.patch(`${baseURL}/question/${uuid}`, data, {
       withCredentials: true, // Si ton backend utilise des cookies pour l'auth
     });
     return response.data;

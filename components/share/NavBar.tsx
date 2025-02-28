@@ -3,11 +3,9 @@
 import Logo from "../../public/assets/logo.png";
 export default function NavBar() {
   return (
-    <div className="fixed flex z-10 justify-center items-center border-b border-[#E14848]  py-4 w-full bg-white max-md:hidden ">
-      <div className=" flex items-center gap-2 capitalize text-2xl">
-        <div className="w-[80px] h-[80px] rounded-full overflow-hidden  border-2 border-red-500 p-3">
-          <img src={Logo} alt="Logo" />
-        </div>
+    <div className="fixed flex  border-b border-[#e1e1e1]  h-[70px]  w-full  justify-center max-md:hidden ">
+      <div className=" flex items-center gap-2 cursor-pointer capitalize text-2xl relative md:right-[10%]">
+        <img src={Logo} alt="Logo" className="w-[40px] h-[40px]" />
       </div>
     </div>
   );

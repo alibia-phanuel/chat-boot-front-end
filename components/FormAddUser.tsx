@@ -3,7 +3,7 @@ import LayoutSystem from "./share/LayoutSystem";
 import { useState } from "react";
 import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
-
+import Layout from "./pages/Layout";
 interface User {
   name: string;
   email: string;
@@ -61,7 +61,7 @@ const FormAddUser = () => {
 
     try {
       const response = await axios.post(
-        "https://chat-boot-92e040193633.herokuapp.com/users",
+        "http://localhost:4000/users",
         formData,
         {
           headers: { "Content-Type": "application/json" },
@@ -89,102 +89,104 @@ const FormAddUser = () => {
     }
   };
   return (
-    <LayoutSystem>
-      <div className="p-6 max-w-2xl mx-auto">
-        <h1 className="text-2xl font-bold mb-2">Utilisateurs</h1>
-        <div className="text-xl text-gray-600 mb-4">
-          Ajouter un nouvel utilisateur
-        </div>
+    <Layout>
+      <LayoutSystem>
+        <div className="p-6 max-w-2xl mx-auto relative shadow-lg top-[15%]">
+          <h1 className="text-2xl font-bold mb-2">Utilisateurs</h1>
+          <div className="text-sm text-gray-600 mb-4">
+            Ajouter un nouvel utilisateur
+          </div>
 
-        <div className="bg-white rounded-lg p-4">
-          <div className="p-4">
-            <form className="space-y-4" onSubmit={handleSubmit}>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Nom
-                </label>
-                <input
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  type="text"
-                  placeholder="Enter username"
-                  required
-                />
-              </div>
+          <div className="bg-white rounded-lg p-4">
+            <div className="p-4">
+              <form className="space-y-4" onSubmit={handleSubmit}>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Nom
+                  </label>
+                  <input
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    type="text"
+                    placeholder="Enter username"
+                    required
+                  />
+                </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Courriel(E-mail)
-                </label>
-                <input
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  type="email"
-                  placeholder="Enter email"
-                  required
-                />
-              </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Courriel(E-mail)
+                  </label>
+                  <input
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    type="email"
+                    placeholder="Enter email"
+                    required
+                  />
+                </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Mot de passe
-                </label>
-                <input
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  type="password"
-                  placeholder="*******"
-                  required
-                />
-              </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Mot de passe
+                  </label>
+                  <input
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    type="password"
+                    placeholder="*******"
+                    required
+                  />
+                </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Confirmer le mot de passe
-                </label>
-                <input
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  type="password"
-                  placeholder="*******"
-                  required
-                />
-              </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Confirmer le mot de passe
+                  </label>
+                  <input
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    type="password"
+                    placeholder="*******"
+                    required
+                  />
+                </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Rôle
-                </label>
-                <select
-                  name="role"
-                  value={formData.role}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Rôle
+                  </label>
+                  <select
+                    name="role"
+                    value={formData.role}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="admin">Administrateur</option>
+                    <option value="user">Employé</option>
+                  </select>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
                 >
-                  <option value="admin">Administrateur</option>
-                  <option value="user">Employé</option>
-                </select>
-              </div>
-
-              <button
-                type="submit"
-                className="w-full px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
-              >
-                Ajouter l'utilisateur
-              </button>
-            </form>
+                  Ajouter l'utilisateur
+                </button>
+              </form>
+            </div>
           </div>
         </div>
-      </div>
-    </LayoutSystem>
+      </LayoutSystem>
+    </Layout>
   );
 };
 

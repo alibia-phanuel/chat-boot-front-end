@@ -18,5 +18,13 @@ export interface Product {
   price: number;
   User: User; // Relation avec l'utilisateur
 }
+
+export interface Faqs {
+  id: number;
+  question: string;
+  answer: string;
+  User: User;
+}
 export type ProductList = Product[];
 export type UserList = User[];
+export type FaqsList = Faqs[];

@@ -12,7 +12,6 @@ import Products from "../components/pages/Products";
 import FormEditeProduct from "../components/FormEditeProduct";
 import FormAddProduct from "../components/FormAddProduct";
 // FIN: Action lier au produits----
-
 import QuestionsReponses from "../components/pages/QuestionsReponses";
 import Stocks from "../components/pages/Stocks";
 import Login from "../components/pages/Login";
@@ -24,16 +23,18 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
+          {/*Route lier au faqs*/}
+          <Route path="/questionsreponses" element={<QuestionsReponses />} />
+          <Route path="/questions-reponses/add" element={<FormAddUser />} />
           {/* Route lier au utilisateurs */}
           <Route path="/users" element={<Users />} />
           <Route path="/users/add" element={<FormAddUser />} />
-          <Route path="`/users/edit/:id" element={<FormEditeUser />} />
+          <Route path="/users/edit/:id" element={<FormEditeUser />} />
           {/* Route lier au produits */}
           <Route path="/products" element={<Products />} />
           <Route path="/products/add" element={<FormAddProduct />} />
           <Route path="/products/edit/:id" element={<FormEditeProduct />} />
-          {/**Route lier au message (automatique) */}
-          <Route path="/questionsreponses" element={<QuestionsReponses />} />
+
           {/* AUTRE */}
           <Route path="/" element={<Login />}></Route>
           <Route path="/dashboard" element={<Dashbord />} />

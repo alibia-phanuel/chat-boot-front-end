@@ -2,6 +2,7 @@ import LayoutSystem from "./share/LayoutSystem";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getUsers } from "../src/api/users/GetUser";
+
 import { User } from "../src/type/type";
 import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
@@ -33,7 +34,7 @@ const UsersList = () => {
 
     try {
       const response = await axios.delete(
-        `https://chat-boot-92e040193633.herokuapp.com/users/${uuid}`
+        `http://localhost:4000/users/${uuid}`
       );
 
       if (response.status === 200) {
@@ -64,60 +65,62 @@ const UsersList = () => {
     return <p className="text-red-500 text-center font-semibold">{error}</p>;
   return (
     <LayoutSystem>
-      <div className="p-6">
-        <h1 className="text-2xl font-bold mb-2">Utilisateurs</h1>
-        <h2 className="text-xl text-gray-600 mb-4">Liste des utilisateurs</h2>
-        <Link
-          to="/users/add"
-          className="inline-block px-4 py-2 mb-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-        >
-          Ajouter un nouveau utilisateur
-        </Link>
-        <table className="w-full border-collapse bg-white shadow-sm rounded-lg overflow-hidden">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                id
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Nom
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Courriel
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Rôle
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {users.map((user, index) => (
-              <tr key={user.uuid} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{user.name}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{user.role}</td>
-                <td className="px-6 py-4 whitespace-nowrap space-x-2">
-                  <Link
-                    to={`/users/edit/${user.uuid}`}
-                    className="inline-block px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-500"
-                  >
-                    Editer
-                  </Link>
-                  <button
-                    onClick={() => deleteUser(user.uuid)}
-                    className="inline-block px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600"
-                  >
-                    Supprimer
-                  </button>
-                </td>
+      <div className="flex justify-center items-center">
+        <div className="p-6 container w-full">
+          <h1 className="text-2xl font-bold mb-2">Utilisateurs</h1>
+          <h2 className="text-xl text-gray-600 mb-4">Liste des utilisateurs</h2>
+          <Link
+            to="/users/add"
+            className="inline-block px-4 py-2 mb-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+          >
+            Ajouter un nouveau utilisateur
+          </Link>
+          <table className="w-full border-collapse bg-white shadow-sm rounded-lg overflow-hidden">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  id
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Nom
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Courriel
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Rôle
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {users.map((user, index) => (
+                <tr key={user.uuid} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{user.name}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{user.role}</td>
+                  <td className="px-6 py-4 whitespace-nowrap space-x-2">
+                    <Link
+                      to={`/users/edit/${user.uuid}`}
+                      className="inline-block px-3 py-1 bg-[#3B82F6] text-white text-sm rounded hover:bg-red-500"
+                    >
+                      Editer
+                    </Link>
+                    <button
+                      onClick={() => deleteUser(user.uuid)}
+                      className="inline-block px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600"
+                    >
+                      🗑 Supprimer
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </LayoutSystem>
   );
