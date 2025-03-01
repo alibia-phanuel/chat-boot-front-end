@@ -81,13 +81,20 @@ const FormEditeProduct = () => {
                 />
               </div>
 
-              <div className="flex justify-end">
+              <div className="flex gap-4">
                 <button
                   type="submit"
                   disabled={loading}
                   className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition disabled:opacity-50"
                 >
                   {loading ? "Mise à jour..." : "Mettre à jour"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => navigate("/products")}
+                  className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                >
+                  Annuler
                 </button>
               </div>
             </form>

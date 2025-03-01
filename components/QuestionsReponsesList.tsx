@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { FaEdit } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
 import LayoutSystem from "../components/share/LayoutSystem";
 import { getGetQuestion } from "../src/api/faqs/QuestionList";
 import { deleteQuestion } from "../src/api/faqs/DeleteQuestion";
@@ -32,7 +35,7 @@ const QuestionsReponsesList = () => {
       try {
         deleteQuestion(id);
         setFaqs(faqs.filter((faq) => faq.id !== id));
-        toast.success("Produit supprimé avec succès !");
+        toast.success("L'enssemble a été supprimé avec succès !");
       } catch (error) {
         toast.error("Erreur lors de la suppression du produit !");
         console.error(error);
@@ -40,23 +43,15 @@ const QuestionsReponsesList = () => {
     }
   };
 
-  if (loading) {
+  if (loading)
     return (
-      <div className="flex justify-center items-center h-32">
-        <p className="text-blue-500 text-lg font-semibold animate-pulse">
-          Chargement...
-        </p>
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-red-500"></div>
       </div>
     );
-  }
 
-  if (error) {
-    return (
-      <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded-md">
-        <p>❌ {error}</p>
-      </div>
-    );
-  }
+  if (error)
+    return <p className="text-red-500 text-center font-semibold">{error}</p>;
 
   return (
     <LayoutSystem>
@@ -64,12 +59,13 @@ const QuestionsReponsesList = () => {
         <div className="p-6 container">
           <h1 className="text-2xl font-bold mb-2">Questions & Réponses</h1>
           <h2 className="text-xl text-gray-600 mb-4">
-            Liste des questions et reponses associer
+            Liste des questions et réponses associées.
           </h2>
           <Link
             to="/questions-reponses/add"
-            className="inline-block px-4 py-2 mb-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+            className="flex items-center gap-2 w-[210px] px-4 py-2 mb-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
           >
+            <FaPlus />
             Ajouter un enssemble
           </Link>
           <table className="w-full border-collapse bg-white shadow-sm rounded-lg overflow-hidden">
@@ -84,12 +80,12 @@ const QuestionsReponsesList = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Réponses
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Auteur
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Rôle
-                </th>
+                </th> */}
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Actions
                 </th>
@@ -105,24 +101,26 @@ const QuestionsReponsesList = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     {faq.answer} FCFA
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  {/* <td className="px-6 py-4 whitespace-nowrap">
                     {faq.User?.name}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {faq.User?.role}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap space-x-2">
+                  </td> */}
+                  <td className="px-6 flex py-4 whitespace-nowrap space-x-2">
                     <Link
                       to={`/questions-reponses/edit/${faq.id}`}
-                      className="inline-block px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600"
+                      className="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 flex items-center  gap-2"
                     >
+                      <FaEdit />
                       Editer
                     </Link>
                     <button
-                      className="inline-block px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600"
+                      className="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 flex items-center  gap-2"
                       onClick={() => handleDelete(faq.id)}
                     >
-                      🗑 Supprimer
+                      <FaTrash />
+                      Supprimer
                     </button>
                   </td>
                 </tr>

@@ -1,0 +1,131 @@
+import Layout from "./pages/Layout";
+import { UpdateFaqsDatas } from "@/api/faqs/UpdateQuestion";
+import "react-toastify/dist/ReactToastify.css";
+import LayoutSystem from "./share/LayoutSystem";
+import React, { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+interface Faqs {
+  id?: string;
+  question: string;
+  answer: string;
+}
+
+const FormEditQuestion = () => {
+  const [formData, setFormData] = useState<Faqs>({
+    question: "",
+    answer: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+
+  // Fonction de validation avec Toasts
+  const validateForm = (): boolean => {
+    if (!formData.question.trim()) {
+      toast.error("La question est requise.");
+      return false;
+    }
+    if (!formData.answer.trim()) {
+      toast.error("La réponse est requise.");
+      return false;
+    }
+    return true;
+  };
+
+  // Gestion des changements des inputs
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  // Gestion de la soumission du formulaire
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!id) {
+      toast.error("Identifiant introuvable.");
+      return;
+    }
+    if (!validateForm()) return;
+
+    setLoading(true);
+    try {
+      await UpdateFaqsDatas(id, formData);
+      toast.success("Ensemble mis à jour avec succès !");
+      setTimeout(() => navigate("/questionsreponses"), 1500);
+    } catch (error) {
+      toast.error("Erreur lors de la mise à jour.");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Layout>
+      <LayoutSystem>
+        <div className="p-6 max-w-2xl mx-auto relative shadow-lg top-[15%]">
+          <h1 className="text-2xl font-bold mb-2">Questions & Réponses</h1>
+          <div className="text-sm text-gray-600 mb-4">
+            Modifier cet ensemble
+          </div>
+
+          <div className="bg-white rounded-lg p-4">
+            <div className="p-4">
+              <form className="space-y-4" onSubmit={handleSubmit}>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Question
+                  </label>
+                  <input
+                    name="question"
+                    value={formData.question}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    type="text"
+                    placeholder="Entrez une question"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Réponse
+                  </label>
+                  <input
+                    name="answer"
+                    value={formData.answer}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    type="text"
+                    placeholder="Entrez une réponse"
+                  />
+                </div>
+
+                <div className="flex gap-4">
+                  <button
+                    type="submit"
+                    className=" px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
+                    disabled={loading}
+                  >
+                    {loading ? "Modification..." : "Modifier !"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => navigate("/questionsreponses")}
+                    className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                  >
+                    Annuler
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </LayoutSystem>
+    </Layout>
+  );
+};
+
+export default FormEditQuestion;

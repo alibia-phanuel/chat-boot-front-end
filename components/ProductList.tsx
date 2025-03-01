@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { FaEdit } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
+
 import "react-toastify/dist/ReactToastify.css";
 import LayoutSystem from "../components/share/LayoutSystem";
 import { getProducts } from "../src/api/products/ProductList";
@@ -43,23 +47,15 @@ const ProductList = () => {
     }
   };
 
-  if (loading) {
+  if (loading)
     return (
-      <div className="flex justify-center items-center h-32">
-        <p className="text-blue-500 text-lg font-semibold animate-pulse">
-          Chargement...
-        </p>
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-red-500"></div>
       </div>
     );
-  }
 
-  if (error) {
-    return (
-      <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded-md">
-        <p>❌ {error}</p>
-      </div>
-    );
-  }
+  if (error)
+    return <p className="text-red-500 text-center font-semibold">{error}</p>;
 
   return (
     <LayoutSystem>
@@ -69,9 +65,9 @@ const ProductList = () => {
           <h2 className="text-xl text-gray-600 mb-4">Liste des produits</h2>
           <Link
             to="/products/add"
-            className="inline-block px-4 py-2 mb-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+            className="px-4 py-2 mb-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center gap-2 w-[190px]"
           >
-            Ajouter un nouveau
+            <FaPlus /> Nouveau produit
           </Link>
           <table className="w-full border-collapse bg-white shadow-sm rounded-lg overflow-hidden">
             <thead className="bg-gray-50">
@@ -112,18 +108,20 @@ const ProductList = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     {product.User.role}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap space-x-2">
+                  <td className="px-6 py-4 whitespace-nowrap space-x-2 flex">
                     <Link
                       to={`/products/edit/${product.uuid}`}
-                      className="inline-block px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600"
+                      className=" px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 flex items-center  gap-2"
                     >
+                      <FaEdit />
                       Editer
                     </Link>
                     <button
-                      className="inline-block px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600"
+                      className=" px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600  flex items-center  gap-2"
                       onClick={() => handleDelete(product.uuid)}
                     >
-                      🗑 Supprimer
+                      <FaTrash />
+                      Supprimer
                     </button>
                   </td>
                 </tr>

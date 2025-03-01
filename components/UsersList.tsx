@@ -2,7 +2,9 @@ import LayoutSystem from "./share/LayoutSystem";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getUsers } from "../src/api/users/GetUser";
-
+import { FaEdit } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
 import { User } from "../src/type/type";
 import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
@@ -71,9 +73,10 @@ const UsersList = () => {
           <h2 className="text-xl text-gray-600 mb-4">Liste des utilisateurs</h2>
           <Link
             to="/users/add"
-            className="inline-block px-4 py-2 mb-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+            className="flex gap-2 items-center w-[210px] px-4 py-2 mb-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
           >
-            Ajouter un nouveau utilisateur
+            <FaPlus />
+            Ajouter un utilisateur
           </Link>
           <table className="w-full border-collapse bg-white shadow-sm rounded-lg overflow-hidden">
             <thead className="bg-gray-50">
@@ -102,18 +105,20 @@ const UsersList = () => {
                   <td className="px-6 py-4 whitespace-nowrap">{user.name}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{user.role}</td>
-                  <td className="px-6 py-4 whitespace-nowrap space-x-2">
+                  <td className="px-6 py-4 whitespace-nowrap space-x-2 flex">
                     <Link
                       to={`/users/edit/${user.uuid}`}
-                      className="inline-block px-3 py-1 bg-[#3B82F6] text-white text-sm rounded hover:bg-red-500"
+                      className="flex items-center  gap-2 px-3 py-1 bg-[#3B82F6] text-white text-sm rounded hover:bg-red-500"
                     >
+                      <FaEdit />
                       Editer
                     </Link>
                     <button
                       onClick={() => deleteUser(user.uuid)}
-                      className="inline-block px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600"
+                      className="flex items-center  gap-2 px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600"
                     >
-                      🗑 Supprimer
+                      <FaTrash />
+                      Supprimer
                     </button>
                   </td>
                 </tr>

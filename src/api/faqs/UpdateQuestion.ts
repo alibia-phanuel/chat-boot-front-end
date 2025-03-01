@@ -1,13 +1,13 @@
 import axios, { AxiosError } from "axios";
-export interface UpdateProductData {
-  name?: string;
-  price?: number;
+export interface faqsData {
+  question: string;
+  answer: string;
 }
 
-export const updateProduct = async (uuid: string, data: UpdateProductData) => {
+export const UpdateFaqsDatas = async (id: string, data: faqsData) => {
   const baseURL = "http://localhost:4000";
   try {
-    const response = await axios.patch(`${baseURL}/question/${uuid}`, data, {
+    const response = await axios.patch(`${baseURL}/question/${id}`, data, {
       withCredentials: true, // Si ton backend utilise des cookies pour l'auth
     });
     return response.data;

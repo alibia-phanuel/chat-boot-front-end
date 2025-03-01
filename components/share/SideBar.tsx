@@ -3,6 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { IoHome, IoPerson, IoLogOut } from "react-icons/io5";
 import { FaBox } from "react-icons/fa";
 import { FaQuestionCircle } from "react-icons/fa";
+import { FaFacebookSquare } from "react-icons/fa";
 import { FaRobot } from "react-icons/fa";
 import { IoNotifications } from "react-icons/io5";
 import { FaBarsStaggered } from "react-icons/fa6";
@@ -31,6 +32,7 @@ const SideBar = () => {
           <div>alibia</div>
         </div>
       </div>
+
       <aside className="">
         {/* General Section */}
         <p className="text-gray-600 font-semibold mb-2 py-2  px-4">Général</p>
@@ -38,7 +40,11 @@ const SideBar = () => {
           <li className="px-6 my-2">
             <NavLink
               to="/dashboard"
-              className="flex items-center space-x-2 text-gray-700 hover:text-[#E14848]"
+              className={({ isActive }) =>
+                isActive
+                  ? "flex items-center space-x-2 text-[#06A2FF]"
+                  : "flex items-center space-x-2 text-gray-700 hover:text-[#6bbded]"
+              }
             >
               <IoHome /> <span>Tableau de bord</span>
             </NavLink>
@@ -50,7 +56,11 @@ const SideBar = () => {
           <li className="px-6 my-2">
             <NavLink
               to="/products"
-              className="flex items-center space-x-2 text-gray-700 hover:text-[#E14848]"
+              className={({ isActive }) =>
+                isActive
+                  ? "flex items-center space-x-2 text-[#06A2FF]"
+                  : "flex items-center space-x-2 text-gray-700 hover:text-[#6bbded]"
+              }
             >
               <FaBox /> <span>Produits</span>
             </NavLink>
@@ -58,44 +68,29 @@ const SideBar = () => {
           <li className="px-6 my-2">
             <NavLink
               to="/questionsreponses"
-              className="flex items-center space-x-2 text-gray-700 hover:text-[#E14848]"
+              className={({ isActive }) =>
+                isActive
+                  ? "flex items-center space-x-2 text-[#06A2FF]"
+                  : "flex items-center space-x-2 text-gray-700 hover:text-[#6bbded]"
+              }
             >
               <FaQuestionCircle /> <span>Questions/Réponses</span>
             </NavLink>
           </li>
-
           <li className="px-6 my-2">
             <NavLink
               to="/Stocks"
-              className="flex items-center space-x-2 text-gray-700 hover:text-[#E14848]"
+              className={({ isActive }) =>
+                isActive
+                  ? "flex items-center space-x-2 text-[#06A2FF]"
+                  : "flex items-center space-x-2 text-gray-700 hover:text-[#6bbded]"
+              }
             >
               <IoStatsChart /> <span>Gestion des stocks</span>
             </NavLink>
           </li>
         </ul>
-        {/* General message sections */}
-        <p className="text-gray-600 font-semibold mb-2 py-2  px-4">Message</p>
-        <ul>
-          <li className="px-6 my-2">
-            <NavLink
-              to="/Chatboot"
-              className="flex items-center space-x-2 text-gray-700 hover:text-[#E14848]"
-            >
-              <FaRobot />
-              <span>Chatboot</span>
-            </NavLink>
-          </li>
 
-          <li className="px-6 my-2">
-            <NavLink
-              to="/Message"
-              className="flex items-center space-x-2 text-gray-700 hover:text-[#E14848]"
-            >
-              <IoNotifications />
-              <span>Message interne</span>
-            </NavLink>
-          </li>
-        </ul>
         {/* Admin Section (Visible Only to Admins) */}
         {user && user.role === "admin" && (
           <div className="mt-4">
@@ -106,7 +101,11 @@ const SideBar = () => {
               <li className="px-6 my-2">
                 <NavLink
                   to="/users"
-                  className="flex items-center space-x-2 text-gray-700 hover:text-[#E14848]"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "flex items-center space-x-2 text-[#06A2FF]"
+                      : "flex items-center space-x-2 text-gray-700 hover:text-[#6bbded]"
+                  }
                 >
                   <IoPerson /> <span>Utilisateurs</span>
                 </NavLink>
@@ -114,6 +113,57 @@ const SideBar = () => {
             </ul>
           </div>
         )}
+        {/* General message sections */}
+        <p className="text-gray-600 font-semibold mb-2 py-2  px-4">Message</p>
+        <ul>
+          <li className="px-6 my-2">
+            <NavLink
+              to="/Chatboot"
+              className={({ isActive }) =>
+                isActive
+                  ? "flex items-center space-x-2 text-[#06A2FF]"
+                  : "flex items-center space-x-2 text-gray-700 hover:text-[#6bbded]"
+              }
+            >
+              <FaRobot />
+              <span>Chatboot</span>
+            </NavLink>
+          </li>
+
+          <li className="px-6 my-2">
+            <NavLink
+              to="/Message"
+              className={({ isActive }) =>
+                isActive
+                  ? "flex items-center space-x-2 text-[#06A2FF]"
+                  : "flex items-center space-x-2 text-gray-700 hover:text-[#6bbded]"
+              }
+            >
+              <IoNotifications />
+              <span>Message interne</span>
+            </NavLink>
+          </li>
+        </ul>
+
+        {/* "Services externe" */}
+        <p className="text-gray-600 font-semibold mt-4 mb-2 py-2 px-4">
+          Services externe
+        </p>
+        <ul>
+          <li className="px-6 my-2">
+            <NavLink
+              to="/facebookIdPost"
+              className={({ isActive }) =>
+                isActive
+                  ? "flex items-center space-x-2 text-[#06A2FF]"
+                  : "flex items-center space-x-2 text-gray-700 hover:text-[#6bbded]"
+              }
+            >
+              <FaFacebookSquare />
+              <span>id Post Facebook</span>
+            </NavLink>
+          </li>
+        </ul>
         {/* Settings Section */}
         <p className="text-gray-600 font-semibold mt-4 mb-2 py-2 px-4">
           Paramètres
