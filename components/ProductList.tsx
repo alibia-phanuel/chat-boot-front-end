@@ -16,13 +16,21 @@ const ProductList = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
+      setLoading(true);
+      setError(null); // Réinitialiser l'erreur avant chaque requête
+
       try {
-        const data = await getProducts();
-        setProducts(data);
+        const result = await getProducts();
+        if ("message" in result) {
+          // Si le résultat est une erreur (type ErrorResponse)
+          toast.error(result.message);
+        } else {
+          // Si le résultat est un tableau de produits
+          setProducts(result);
+        }
       } catch (err) {
-        setError("Impossible de récupérer les produits.");
-        toast.error("Erreur lors du chargement des produits !");
-        console.error(err);
+        toast.error("Une erreur inconnue est survenue");
+        console.log(err);
       } finally {
         setLoading(false);
       }
