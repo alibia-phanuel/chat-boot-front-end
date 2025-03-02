@@ -64,7 +64,10 @@ const FormAddProduct = () => {
     try {
       const response = await axios.post(
         "https://chat-boot-92e040193633.herokuapp.com/products",
-        productData
+        productData,
+        {
+          withCredentials: true,
+        }
       );
       if (response.status === 201) {
         toast.success("Produit ajouté avec succès !");

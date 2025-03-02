@@ -35,6 +35,9 @@ const FormAddQuestion = () => {
         {
           question,
           answer,
+        },
+        {
+          withCredentials: true,
         }
       );
       toast.success(
