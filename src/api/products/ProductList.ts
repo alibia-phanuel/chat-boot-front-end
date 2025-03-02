@@ -14,8 +14,14 @@ interface ErrorResponse {
 }
 export const getProducts = async (): Promise<ProductList | ErrorResponse> => {
   const baseURL = "https://chat-boot-92e040193633.herokuapp.com/";
+  const token = "ton_token_ici"; // Remplace ceci par ton vrai token
+
   try {
-    const response = await axios.get<ProductList>(`${baseURL}products`);
+    const response = await axios.get<ProductList>(`${baseURL}products`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Ajouter le token d'authentification
+      },
+    });
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -28,27 +34,17 @@ export const getProducts = async (): Promise<ProductList | ErrorResponse> => {
       return {
         message: "Erreur lors de la récupération des produits.",
         status: error.response?.status || 500,
-        data: (error.response?.data as ErrorData) || {}, // Cast à ErrorData ou objet vide
+        data: error.response?.data || {},
         url: error.config.url || "",
       };
     } else {
-      // Vérification si 'error' peut être traité comme un ErrorData
-      const errorData = isErrorData(error)
-        ? error
-        : { errorMessage: "Une erreur inconnue est survenue." };
-
       console.error("Erreur inconnue:", error);
       return {
         message: "Une erreur inconnue est survenue.",
         status: 500,
-        data: errorData, // Assigner l'erreur à 'data'
+        data: {},
         url: "",
       };
     }
   }
 };
-
-// Type guard pour vérifier si 'error' correspond à ErrorData
-function isErrorData(error: unknown): error is ErrorData {
-  return typeof error === "object" && error !== null && "errorCode" in error;
-}
