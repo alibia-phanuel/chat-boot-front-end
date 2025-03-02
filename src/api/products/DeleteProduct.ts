@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
 export const deleteProduct = async (uuid: string) => {
-  const baseURL = "http://localhost:4000";
+  const baseURL = "https://l0ehi3.stackhero-network.com";
   try {
     const response = await axios.delete(`${baseURL}/products/${uuid}`);
     return response.data;

@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
 // Récupération de l'URL de base depuis l'environnement
-const baseURL = "http://localhost:4000";
+const baseURL = "https://l0ehi3.stackhero-network.com";
 /**
  * Définition de l'interface représentant les données utilisateur après connexion.
  */

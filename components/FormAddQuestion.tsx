@@ -30,10 +30,13 @@ const FormAddQuestion = () => {
     if (!validateForm()) return;
 
     try {
-      const response = await axios.post("http://localhost:4000/question", {
-        question,
-        answer,
-      });
+      const response = await axios.post(
+        "https://l0ehi3.stackhero-network.com/question",
+        {
+          question,
+          answer,
+        }
+      );
       toast.success(
         response.data.msg || "cet ensemble a été ajouté avec succès !"
       );

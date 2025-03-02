@@ -11,7 +11,7 @@ export interface UpdateProductData {
   productIdOrKeyword: string;
 }
 export const updateProduct = async (uuid: string, data: UpdateProductData) => {
-  const baseURL = "http://localhost:4000";
+  const baseURL = "https://l0ehi3.stackhero-network.com";
   try {
     const response = await axios.patch(`${baseURL}/products/${uuid}`, data, {
       withCredentials: true, // Si ton backend utilise des cookies pour l'auth

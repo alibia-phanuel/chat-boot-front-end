@@ -7,7 +7,7 @@ export interface UpdateUserData {
 }
 
 export const updateUser = async (uuid: string, data: UpdateUserData) => {
-  const baseURL = "http://localhost:4000";
+  const baseURL = "https://l0ehi3.stackhero-network.com";
   try {
     const response = await axios.patch(`${baseURL}/users/${uuid}`, data, {
       withCredentials: true, // Si ton backend utilise des cookies pour l'auth

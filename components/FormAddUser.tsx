@@ -61,7 +61,7 @@ const FormAddUser = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/users",
+        "https://l0ehi3.stackhero-network.com/users",
         formData,
         {
           headers: { "Content-Type": "application/json" },
