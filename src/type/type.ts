@@ -11,6 +11,7 @@ export interface User {
   createdAt: string;
   updatedAt: string;
 }
+
 // Interface pour un produit
 export interface Product {
   uuid: string;
@@ -25,6 +26,26 @@ export interface Faqs {
   answer: string;
   User: User;
 }
+
+export interface UpdateProductData {
+  id?: number;
+  name: string;
+  price: number;
+  shippingFee: number;
+  extraQuestions?: string;
+  userId: User["id"];
+  productIdOrKeyword: string;
+}
+export type UpdateProductDataList = {
+  id?: number;
+
+  name: string;
+  price: number;
+  shippingFee: number;
+  extraQuestions?: string;
+  userId?: User["id"];
+  productIdOrKeyword: string;
+};
 export type ProductList = Product[];
 export type UserList = User[];
 export type FaqsList = Faqs[];

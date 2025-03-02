@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { AppDispatch, RootState } from "../../src/stores/store";
 import { getMe } from "../../src/feature/authSlice";
 import Layout from "./Layout";
+
 const Products = () => {
   const dispatch = useDispatch<AppDispatch>(); // Appel de useDispatch dans un composant
   const navigate = useNavigate();

@@ -21,6 +21,7 @@ import Dashbord from "../components/pages/Dashbord";
 import Chatboot from "../components/pages/Chatboot";
 import Message from "../components/pages/Message";
 import PostsFacebook from "../components/pages/PostsFacebook";
+import ShopifyOrders from "../components/pages/ShopifyOrders";
 function App() {
   return (
     <>
@@ -47,6 +48,7 @@ function App() {
           <Route path="/dashboard" element={<Dashbord />} />
           <Route path="/Stocks" element={<Stocks />} />
           <Route path="/Message" element={<Message />} />
+          <Route path="/ShopifyOrders" element={<ShopifyOrders />} />
           <Route path="/Chatboot" element={<Chatboot />} />
         </Routes>
       </BrowserRouter>

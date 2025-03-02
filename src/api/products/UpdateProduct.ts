@@ -1,9 +1,15 @@
 import axios, { AxiosError } from "axios";
+import { User } from "@/type/type";
+// Définition de l'interface TypeScript pour le modèle "Products"
 export interface UpdateProductData {
-  name?: string;
-  price?: number;
+  id?: number;
+  name: string;
+  price: number;
+  shippingFee: number;
+  extraQuestions?: string;
+  userId?: User["id"];
+  productIdOrKeyword: string;
 }
-
 export const updateProduct = async (uuid: string, data: UpdateProductData) => {
   const baseURL = "http://localhost:4000";
   try {

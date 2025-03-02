@@ -1,5 +1,4 @@
 import axios, { AxiosError } from "axios";
-
 export const deleteProduct = async (uuid: string) => {
   const baseURL = "http://localhost:4000";
   try {
