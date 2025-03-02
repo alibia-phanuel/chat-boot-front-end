@@ -61,7 +61,7 @@ const FormAddUser = () => {
 
     try {
       const response = await axios.post(
-        "https://l0ehi3.stackhero-network.com/users",
+        "https://chat-boot-92e040193633.herokuapp.com/users",
         formData,
         {
           headers: { "Content-Type": "application/json" },

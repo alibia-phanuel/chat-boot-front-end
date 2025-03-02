@@ -63,7 +63,7 @@ const FormAddProduct = () => {
     // Envoi des données avec Axios
     try {
       const response = await axios.post(
-        "http://localhost:4000/products",
+        "https://chat-boot-92e040193633.herokuapp.com/products",
         productData
       );
       if (response.status === 201) {

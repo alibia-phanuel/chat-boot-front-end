@@ -1,9 +1,9 @@
 import axios, { AxiosError } from "axios";
 
 export const deleteQuestion = async (id: number) => {
-  const baseURL = "http://localhost:4000";
+  const baseURL = "https://chat-boot-92e040193633.herokuapp.com/";
   try {
-    const response = await axios.delete(`${baseURL}/question/${id}`);
+    const response = await axios.delete(`${baseURL}question/${id}`);
     return response.data;
   } catch (error: unknown) {
     if (error instanceof AxiosError) {

@@ -4,7 +4,6 @@ import { FaSpinner } from "react-icons/fa"; // Icône de chargement
 const StocksList = () => {
   const [loading, setLoading] = useState(true); // État pour gérer le loader
   const [showMessage, setShowMessage] = useState(false); // État pour gérer l'affichage du message
-
   // Effet pour simuler le chargement de 1 seconde
   useEffect(() => {
     const timer = setTimeout(() => {

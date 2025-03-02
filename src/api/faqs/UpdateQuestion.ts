@@ -5,7 +5,7 @@ export interface faqsData {
 }
 
 export const UpdateFaqsDatas = async (id: string, data: faqsData) => {
-  const baseURL = "http://localhost:4000";
+  const baseURL = "https://chat-boot-92e040193633.herokuapp.com";
   try {
     const response = await axios.patch(`${baseURL}/question/${id}`, data, {
       withCredentials: true, // Si ton backend utilise des cookies pour l'auth
