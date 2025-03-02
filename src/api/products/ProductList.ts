@@ -14,7 +14,7 @@ interface ErrorResponse {
 }
 export const getProducts = async (): Promise<ProductList | ErrorResponse> => {
   const baseURL = "https://chat-boot-92e040193633.herokuapp.com/";
-  const token = "ton_token_ici"; // Remplace ceci par ton vrai token
+  const token = "ton_token_ici";
 
   try {
     const response = await axios.get<ProductList>(`${baseURL}products`, {
