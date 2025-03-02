@@ -48,10 +48,14 @@ export const LoginUser = createAsyncThunk(
   ) => {
     try {
       // Envoi de la requête de connexion avec les informations de l'utilisateur
-      const response = await axios.post<User>(`${baseURL}/login`, {
-        email: user.email,
-        password: user.password,
-      });
+      const response = await axios.post<User>(
+        `${baseURL}/login`,
+        {
+          email: user.email,
+          password: user.password,
+        },
+        { withCredentials: true }
+      );
 
       // Retourne les données de l'utilisateur en cas de succès
       return response.data;
@@ -78,7 +82,9 @@ export const getMe = createAsyncThunk<User, void, { rejectValue: string }>(
   "user/getMe",
   async (_, thunkAPI) => {
     try {
-      const response = await axios.get<User>(`${baseURL}/me`);
+      const response = await axios.get<User>(`${baseURL}/me`, {
+        withCredentials: true,
+      });
 
       // Si la requête réussit, retourne les données de l'utilisateur
       return response.data;
@@ -107,7 +113,7 @@ export const LogOut = createAsyncThunk<void, void, { rejectValue: string }>(
   "user/LogOut",
   async (_, thunkAPI) => {
     try {
-      await axios.delete(`${baseURL}/logout`);
+      await axios.delete(`${baseURL}/logout`, { withCredentials: true });
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const message =
