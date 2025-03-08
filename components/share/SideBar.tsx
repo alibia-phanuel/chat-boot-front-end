@@ -1,6 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import Logo from "../../public/assets/logo.png";
-
 import { IoHome, IoPerson, IoLogOut } from "react-icons/io5";
 import { FaShopify } from "react-icons/fa6";
 import { FaBox } from "react-icons/fa";

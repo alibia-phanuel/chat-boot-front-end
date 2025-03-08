@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import Layout from "../../components/pages/Layout";
 import LayouSystem from "../share/LayoutSystem";
-
 const PostsFacebook = () => {
   const [loading, setLoading] = useState(true);
 

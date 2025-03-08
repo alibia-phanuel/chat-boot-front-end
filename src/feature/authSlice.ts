@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 // Récupération de l'URL de base depuis l'environnement
 const baseURL = "https://chat-boot-92e040193633.herokuapp.com";
 /**
@@ -75,37 +75,37 @@ export const LoginUser = createAsyncThunk(
   }
 );
 
-/**
- * Action asynchrone pour récupérer les informations de l'utilisateur connecté.
- */
-export const getMe = createAsyncThunk<User, void, { rejectValue: string }>(
-  "user/getMe",
-  async (_, thunkAPI) => {
-    try {
-      const response = await axios.get<User>(`${baseURL}/me`, {
-        withCredentials: true,
-      });
+// /**
+//  * Action asynchrone pour récupérer les informations de l'utilisateur connecté.
+//  */
+// export const getMe = createAsyncThunk<User, void, { rejectValue: string }>(
+//   "user/getMe",
+//   async (_, thunkAPI) => {
+//     try {
+//       const response = await axios.get<User>(`${baseURL}/me`, {
+//         withCredentials: true,
+//       });
 
-      // Si la requête réussit, retourne les données de l'utilisateur
-      return response.data;
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError;
+//       // Si la requête réussit, retourne les données de l'utilisateur
+//       return response.data;
+//     } catch (error) {
+//       if (axios.isAxiosError(error)) {
+//         const axiosError = error as AxiosError;
 
-        // Vérifie si l'API a retourné une réponse
-        if (axiosError.response) {
-          const message =
-            (axiosError.response.data as ErrorResponse)?.msg ||
-            "Une erreur inconnue est survenue";
-          return thunkAPI.rejectWithValue(message);
-        }
-      }
+//         // Vérifie si l'API a retourné une réponse
+//         if (axiosError.response) {
+//           const message =
+//             (axiosError.response.data as ErrorResponse)?.msg ||
+//             "Une erreur inconnue est survenue";
+//           return thunkAPI.rejectWithValue(message);
+//         }
+//       }
 
-      // En cas d'erreur de connexion ou autre erreur
-      return thunkAPI.rejectWithValue("Une erreur inconnue s'est produite");
-    }
-  }
-);
+//       // En cas d'erreur de connexion ou autre erreur
+//       return thunkAPI.rejectWithValue("Une erreur inconnue s'est produite");
+//     }
+//   }
+// );
 /**
  * Action asynchrone pour déconnecter l'utilisateur.
  */
@@ -156,19 +156,7 @@ export const authSlice = createSlice({
         state.isError = true;
         state.message = action.payload as string;
       })
-      .addCase(getMe.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(getMe.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = true;
-        state.user = action.payload;
-      })
-      .addCase(getMe.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = action.payload as string;
-      })
+
       .addCase(LogOut.pending, (state) => {
         state.isLoading = true;
       })
