@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+
 import Logo from "../../public/assets/logo.png";
 import { IoHome, IoPerson, IoLogOut } from "react-icons/io5";
 import { FaShopify } from "react-icons/fa6";
@@ -12,15 +12,12 @@ import { FaBarsStaggered } from "react-icons/fa6";
 import { IoStatsChart } from "react-icons/io5";
 
 const SideBar = () => {
-  const Logout = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    useEffect(() => {
-      localStorage.removeItem("user"); // Nettoyage du localStorage
-      navigate("/"); // Redirection vers la page de login
-    }, [navigate]);
-
-    return null; // Ce composant ne rend rien, il sert juste à gérer la déconnexion
+  // Supprime l'utilisateur du localStorage et redirige
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/");
   };
   return (
     <div className="w-64 max-md:w-full hidden md:block  bg-white border-r border-[#e1e1e1] h-full p-4 min-h-screen fixed z-20">
@@ -185,7 +182,7 @@ const SideBar = () => {
         <ul>
           <li className="px-6 my-2">
             <button
-              onClick={Logout}
+              onClick={handleLogout}
               className="flex items-center space-x-2 text-red-600 hover:text-red-800"
             >
               <IoLogOut /> <span>Déconnexion</span>
