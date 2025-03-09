@@ -10,18 +10,18 @@ import { FaRobot } from "react-icons/fa";
 import { IoNotifications } from "react-icons/io5";
 import { FaBarsStaggered } from "react-icons/fa6";
 import { IoStatsChart } from "react-icons/io5";
-const Logout = () => {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    localStorage.removeItem("user"); // Nettoyage du localStorage
-    navigate("/"); // Redirection vers la page de login
-  }, [navigate]);
-
-  return null; // Ce composant ne rend rien, il sert juste à gérer la déconnexion
-};
 
 const SideBar = () => {
+  const Logout = () => {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+      localStorage.removeItem("user"); // Nettoyage du localStorage
+      navigate("/"); // Redirection vers la page de login
+    }, [navigate]);
+
+    return null; // Ce composant ne rend rien, il sert juste à gérer la déconnexion
+  };
   return (
     <div className="w-64 max-md:w-full hidden md:block  bg-white border-r border-[#e1e1e1] h-full p-4 min-h-screen fixed z-20">
       <div className="md:hidden flex justify-between items-center max-md:border-b mb-4 py-4">
