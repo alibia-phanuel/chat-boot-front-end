@@ -39,6 +39,14 @@ const ProductList = () => {
   }, []);
 
   const handleDelete = async (uuid: string) => {
+    const userString = localStorage.getItem("user"); // Récupère la valeur du localStorage
+    const user = userString ? JSON.parse(userString) : null; // Vérifie si userString est null avant de parser
+    const role = user?.role ?? "inconnu"; // Si user est null, on assigne "inconnu" par défaut
+    if (role !== "admin") {
+      toast.error("Vous n'êtes pas autorisé à supprimer ce produit !");
+      return; // Arrête l'exécution si l'utilisateur n'est pas admin
+    }
+
     if (confirm("Voulez-vous vraiment supprimer ce produit ?")) {
       try {
         await deleteProduct(uuid);
@@ -90,12 +98,7 @@ const ProductList = () => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Prix
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Auteur
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Rôle
-                  </th>
+
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
                   </th>
@@ -111,12 +114,7 @@ const ProductList = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       {product.price} FCFA
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {product.User.name}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {product.User.role}
-                    </td>
+
                     <td className="px-6 py-4 whitespace-nowrap space-x-2 flex">
                       <Link
                         to={`/products/edit/${product.uuid}`}

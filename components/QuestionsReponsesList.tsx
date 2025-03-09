@@ -29,6 +29,13 @@ const QuestionsReponsesList = () => {
     fetchQuestions();
   }, []);
   const handleDelete = async (id: number) => {
+    const userString = localStorage.getItem("user"); // Récupère la valeur du localStorage
+    const user = userString ? JSON.parse(userString) : null; // Vérifie si userString est null avant de parser
+    const role = user?.role ?? "inconnu"; // Si user est null, on assigne "inconnu" par défaut
+    if (role !== "admin") {
+      toast.error("Vous n'êtes pas autorisé à supprimer cet enssemble !");
+      return; // Arrête l'exécution si l'utilisateur n'est pas admin
+    }
     if (confirm("Voulez-vous vraiment supprimer cet enssemble  ?")) {
       try {
         deleteQuestion(id);
