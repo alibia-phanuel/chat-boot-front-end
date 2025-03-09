@@ -13,6 +13,9 @@ import { IoStatsChart } from "react-icons/io5";
 
 const SideBar = () => {
   const navigate = useNavigate();
+  const userString = localStorage.getItem("user"); // Récupère la valeur du localStorage
+  const user = userString ? JSON.parse(userString) : null; // Vérifie si userString est null avant de parser
+  const role = user?.role ?? "inconnu"; // Si user est null, on assigne "inconnu" par défaut
 
   // Supprime l'utilisateur du localStorage et redirige
   const handleLogout = () => {
@@ -89,27 +92,27 @@ const SideBar = () => {
         </ul>
 
         {/* Admin Section (Visible Only to Admins) */}
-        {/* {user && user.role === "admin" && ( */}
-        <div className="mt-4">
-          <p className="text-gray-600 font-semibold mb-2 py-2 px-4">
-            Administrateur
-          </p>
-          <ul className="space-y-2">
-            <li className="px-6 my-2">
-              <NavLink
-                to="/users"
-                className={({ isActive }) =>
-                  isActive
-                    ? "flex items-center space-x-2 text-[#06A2FF]"
-                    : "flex items-center space-x-2 text-gray-700 hover:text-[#6bbded]"
-                }
-              >
-                <IoPerson /> <span>Utilisateurs</span>
-              </NavLink>
-            </li>
-          </ul>
-        </div>
-        {/* )} */}
+        {role && role === "admin" && (
+          <div className="mt-4">
+            <p className="text-gray-600 font-semibold mb-2 py-2 px-4">
+              Administrateur
+            </p>
+            <ul className="space-y-2">
+              <li className="px-6 my-2">
+                <NavLink
+                  to="/users"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "flex items-center space-x-2 text-[#06A2FF]"
+                      : "flex items-center space-x-2 text-gray-700 hover:text-[#6bbded]"
+                  }
+                >
+                  <IoPerson /> <span>Utilisateurs</span>
+                </NavLink>
+              </li>
+            </ul>
+          </div>
+        )}
         {/* General message sections */}
         <p className="text-gray-600 font-semibold mb-2 py-2  px-4">Message</p>
         <ul>
