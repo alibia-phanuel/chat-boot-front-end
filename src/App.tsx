@@ -81,7 +81,7 @@ function App() {
             }
           />
           <Route
-            path="/questions-reponses/add"
+            path="/question/add"
             element={
               <AuthGuard>
                 <FormAddQuestion />
