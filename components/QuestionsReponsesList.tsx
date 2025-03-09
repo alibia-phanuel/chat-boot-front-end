@@ -12,7 +12,6 @@ import { Faqs } from "../src/type/type";
 const QuestionsReponsesList = () => {
   const [faqs, setFaqs] = useState<Faqs[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -20,8 +19,7 @@ const QuestionsReponsesList = () => {
         const data = await getGetQuestion();
         setFaqs(data);
       } catch (err) {
-        setError("Impossible de récupérer les produits.");
-        toast.error("Erreur lors du chargement des produits !");
+        toast.error("Impossible de récupérer les Questions.");
         console.error(err);
       } finally {
         setLoading(false);
@@ -49,9 +47,6 @@ const QuestionsReponsesList = () => {
         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-red-500"></div>
       </div>
     );
-
-  if (error)
-    return <p className="text-red-500 text-center font-semibold">{error}</p>;
 
   return (
     <LayoutSystem>
