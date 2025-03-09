@@ -52,14 +52,12 @@ const FormEditQuestion = () => {
 
     setLoading(true);
     try {
-      await UpdateFaqsDatas(id, formData);
+      const response = await UpdateFaqsDatas(id, formData);
+      console.log("Réponse serveur :", response);
       toast.success("Ensemble mis à jour avec succès !");
-      setTimeout(() => navigate("/questionsreponses"), 1500);
     } catch (error) {
-      toast.error("Erreur lors de la mise à jour.");
-      console.error(error);
-    } finally {
-      setLoading(false);
+      console.error("Erreur lors de la mise à jour :", error);
+      toast.error(error instanceof Error ? error.message : "Erreur inconnue");
     }
   };
 
