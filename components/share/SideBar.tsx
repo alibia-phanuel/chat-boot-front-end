@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import Logo from "../../public/assets/logo.png";
 import { IoHome, IoPerson, IoLogOut } from "react-icons/io5";
 import { FaShopify } from "react-icons/fa6";
@@ -9,17 +9,10 @@ import { FaRobot } from "react-icons/fa";
 import { IoNotifications } from "react-icons/io5";
 import { FaBarsStaggered } from "react-icons/fa6";
 import { IoStatsChart } from "react-icons/io5";
-import { AppDispatch, RootState } from "../../src/stores/store";
-import { useDispatch, useSelector } from "react-redux";
-import { LogOut, reset } from "../../src/feature/authSlice";
+
 const SideBar = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
-  const { user } = useSelector((state: RootState) => state.auth);
   const logout = () => {
-    dispatch(LogOut());
-    dispatch(reset());
-    navigate("/");
+    alert("bonjour");
   };
   return (
     <div className="w-64 max-md:w-full hidden md:block  bg-white border-r border-[#e1e1e1] h-full p-4 min-h-screen fixed z-20">
@@ -91,27 +84,27 @@ const SideBar = () => {
         </ul>
 
         {/* Admin Section (Visible Only to Admins) */}
-        {user && user.role === "admin" && (
-          <div className="mt-4">
-            <p className="text-gray-600 font-semibold mb-2 py-2 px-4">
-              Administrateur
-            </p>
-            <ul className="space-y-2">
-              <li className="px-6 my-2">
-                <NavLink
-                  to="/users"
-                  className={({ isActive }) =>
-                    isActive
-                      ? "flex items-center space-x-2 text-[#06A2FF]"
-                      : "flex items-center space-x-2 text-gray-700 hover:text-[#6bbded]"
-                  }
-                >
-                  <IoPerson /> <span>Utilisateurs</span>
-                </NavLink>
-              </li>
-            </ul>
-          </div>
-        )}
+        {/* {user && user.role === "admin" && ( */}
+        <div className="mt-4">
+          <p className="text-gray-600 font-semibold mb-2 py-2 px-4">
+            Administrateur
+          </p>
+          <ul className="space-y-2">
+            <li className="px-6 my-2">
+              <NavLink
+                to="/users"
+                className={({ isActive }) =>
+                  isActive
+                    ? "flex items-center space-x-2 text-[#06A2FF]"
+                    : "flex items-center space-x-2 text-gray-700 hover:text-[#6bbded]"
+                }
+              >
+                <IoPerson /> <span>Utilisateurs</span>
+              </NavLink>
+            </li>
+          </ul>
+        </div>
+        {/* )} */}
         {/* General message sections */}
         <p className="text-gray-600 font-semibold mb-2 py-2  px-4">Message</p>
         <ul>

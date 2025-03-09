@@ -1,4 +1,5 @@
 import { ToastContainer } from "react-toastify";
+import AuthGuard from "../components/AuthGuard";
 import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -27,29 +28,130 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
-          {/*Route lier au faqs*/}
-          <Route path="/questionsreponses" element={<QuestionsReponses />} />
-          <Route path="/questions-reponses/add" element={<FormAddQuestion />} />
+          {/* Route accessible sans authentification */}
+          <Route path="/" element={<Login />} />
+
+          {/* Routes protégées */}
+          <Route
+            path="/dashboard"
+            element={
+              <AuthGuard>
+                <Dashbord />
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/Stocks"
+            element={
+              <AuthGuard>
+                <Stocks />
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/Message"
+            element={
+              <AuthGuard>
+                <Message />
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/ShopifyOrders"
+            element={
+              <AuthGuard>
+                <ShopifyOrders />
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/Chatboot"
+            element={
+              <AuthGuard>
+                <Chatboot />
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/questionsreponses"
+            element={
+              <AuthGuard>
+                <QuestionsReponses />
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/questions-reponses/add"
+            element={
+              <AuthGuard>
+                <FormAddQuestion />
+              </AuthGuard>
+            }
+          />
           <Route
             path="/questions-reponses/edit/:id"
-            element={<FormEditQuestion />}
+            element={
+              <AuthGuard>
+                <FormEditQuestion />
+              </AuthGuard>
+            }
           />
-          {/* Route lier au utilisateurs */}
-          <Route path="/users" element={<Users />} />
-          <Route path="/users/add" element={<FormAddUser />} />
-          <Route path="/users/edit/:id" element={<FormEditeUser />} />
-          {/* Route lier au produits */}
-          <Route path="/products" element={<Products />} />
-          <Route path="/products/add" element={<FormAddProduct />} />
-          <Route path="/products/edit/:id" element={<FormEditeProduct />} />
-          {/* AUTRE */}
-          <Route path="/facebookIdPost" element={<PostsFacebook />}></Route>
-          <Route path="/" element={<Login />}></Route>
-          <Route path="/dashboard" element={<Dashbord />} />
-          <Route path="/Stocks" element={<Stocks />} />
-          <Route path="/Message" element={<Message />} />
-          <Route path="/ShopifyOrders" element={<ShopifyOrders />} />
-          <Route path="/Chatboot" element={<Chatboot />} />
+          <Route
+            path="/users"
+            element={
+              <AuthGuard>
+                <Users />
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/users/add"
+            element={
+              <AuthGuard>
+                <FormAddUser />
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/users/edit/:id"
+            element={
+              <AuthGuard>
+                <FormEditeUser />
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/products"
+            element={
+              <AuthGuard>
+                <Products />
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/products/add"
+            element={
+              <AuthGuard>
+                <FormAddProduct />
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/products/edit/:id"
+            element={
+              <AuthGuard>
+                <FormEditeProduct />
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/facebookIdPost"
+            element={
+              <AuthGuard>
+                <PostsFacebook />
+              </AuthGuard>
+            }
+          />
         </Routes>
       </BrowserRouter>
       <ToastContainer />
