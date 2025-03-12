@@ -7,7 +7,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Users from "../components/pages/Users";
 import FormEditeUser from "../components/FormEditeUser";
 import FormAddUser from "../components/FormAddUser";
-
 // Action lier au produits
 import Products from "../components/pages/Products";
 import FormEditeProduct from "../components/FormEditeProduct";
