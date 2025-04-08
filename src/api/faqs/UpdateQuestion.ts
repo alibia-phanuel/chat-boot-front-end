@@ -6,7 +6,7 @@ export interface FaqsData {
 }
 
 export const UpdateFaqsDatas = async (id: string, data: FaqsData) => {
-  const baseURL = "https://chat-boot-92e040193633.herokuapp.com";
+  const baseURL = "http://localhost:3000";
 
   // Vérification des données
   if (!id) throw new Error("ID de la FAQ manquant.");

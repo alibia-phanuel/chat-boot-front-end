@@ -19,7 +19,7 @@ const fetchPosts = async (
 ): Promise<Post[]> => {
   try {
     const response = await axios.get<FacebookResponse>(
-      `https://graph.facebook.com/v21.0/${pageId}/posts`,
+      ` https://graph.facebook.com/v22.0/${pageId}/posts`,
       {
         params: {
           access_token: accessToken,

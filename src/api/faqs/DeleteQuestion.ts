@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 
-export const deleteQuestion = async (id: number) => {
-  const baseURL = "https://chat-boot-92e040193633.herokuapp.com/";
+export const deleteQuestion = async (id: string) => {
+  const baseURL = "http://localhost:3000/";
   try {
     const response = await axios.delete(`${baseURL}question/${id}`, {
       withCredentials: true,

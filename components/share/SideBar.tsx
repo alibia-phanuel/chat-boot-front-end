@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
-
+// import { logout } from "../../stores/userStore";
 import Logo from "../../public/assets/logo.png";
 import { IoHome, IoPerson, IoLogOut } from "react-icons/io5";
 import { FaShopify } from "react-icons/fa6";
@@ -10,18 +10,18 @@ import { FaRobot } from "react-icons/fa";
 import { IoNotifications } from "react-icons/io5";
 import { FaBarsStaggered } from "react-icons/fa6";
 import { IoStatsChart } from "react-icons/io5";
-
+import useUserStore from "../../stores/userStore";
 const SideBar = () => {
   const navigate = useNavigate();
-  const userString = localStorage.getItem("user"); // Récupère la valeur du localStorage
-  const user = userString ? JSON.parse(userString) : null; // Vérifie si userString est null avant de parser
+  const user = useUserStore((state) => state.user);
   const role = user?.role ?? "inconnu"; // Si user est null, on assigne "inconnu" par défaut
-
   // Supprime l'utilisateur du localStorage et redirige
   const handleLogout = () => {
-    localStorage.removeItem("user");
+    localStorage.removeItem("token");
     navigate("/");
   };
+  // Supprime l'utilisateur du localStorage et redirige
+
   return (
     <div className="w-64 max-md:w-full hidden md:block  bg-white border-r border-[#e1e1e1] h-full p-4 min-h-screen fixed z-20">
       <div className="md:hidden flex justify-between items-center max-md:border-b mb-4 py-4">
@@ -36,6 +36,7 @@ const SideBar = () => {
       <aside className="">
         {/* General Section */}
         <p className="text-gray-600 font-semibold mb-2 py-2  px-4">Général</p>
+
         <ul className="space-y-2">
           <li className="px-6 my-2">
             <NavLink
@@ -185,7 +186,7 @@ const SideBar = () => {
         <ul>
           <li className="px-6 my-2">
             <button
-              onClick={handleLogout}
+              onClick={handleLogout} // Appel de la fonction logout lors du clic
               className="flex items-center space-x-2 text-red-600 hover:text-red-800"
             >
               <IoLogOut /> <span>Déconnexion</span>

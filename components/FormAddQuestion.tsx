@@ -4,8 +4,10 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import Layout from "./pages/Layout";
 import "react-toastify/dist/ReactToastify.css";
+import useUserStore from "../stores/userStore";
 
 const FormAddQuestion = () => {
+  const user = useUserStore((state) => state.user);
   // États pour les champs du formulaire
   const [question, setQuestion] = useState<string>("");
   const [answer, setAnswer] = useState<string | number>("");
@@ -26,20 +28,14 @@ const FormAddQuestion = () => {
   // Gestion de la soumission du formulaire
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!validateForm()) return;
 
     try {
-      const response = await axios.post(
-        "https://chat-boot-92e040193633.herokuapp.com/question",
-        {
-          question,
-          answer,
-        },
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axios.post("http://localhost:3000/question", {
+        question,
+        answer,
+        createdBy: user?.id,
+      });
       toast.success(
         response.data.msg || "cet ensemble a été ajouté avec succès !"
       );

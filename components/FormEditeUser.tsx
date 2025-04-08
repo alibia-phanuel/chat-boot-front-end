@@ -1,42 +1,53 @@
 import LayoutSystem from "./share/LayoutSystem";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { updateUser } from "../src/api/users/UpdateUser";
 import { toast } from "react-toastify";
 import Layout from "./pages/Layout";
+import { getUserById } from "../src/api/users/GetUserById";
+
 interface User {
   name: string;
   email: string;
   role: string;
 }
-
 const FormEditeUser = () => {
   const [formData, setFormData] = useState<User>({
     name: "",
     email: "",
     role: "",
   });
-  const [loading, setLoading] = useState(false);
-  const { id } = useParams<{ id: string }>();
+  const [isLoading, setIsLoading] = useState(true);
+  const { id } = useParams();
   const navigate = useNavigate();
 
-  const validateForm = (): boolean => {
-    const { name, email, role } = formData;
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (!id) return;
+      setIsLoading(true);
+      try {
+        const userData = await getUserById(id);
+        if (!userData) {
+          toast.error("Utilisateur introuvable.");
+          return;
+        }
+        setFormData({
+          name: userData.name || "",
+          email: userData.email || "",
+          role: userData.role || "",
+        });
+      } catch (error) {
+        toast.error(
+          "Erreur lors du chargement des informations de l'utilisateur."
+        );
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-    if (!name.trim()) {
-      toast.error("Le nom est requis.");
-      return false;
-    }
-    if (!email.trim() || !/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
-      toast.error("Veuillez entrer un email valide.");
-      return false;
-    }
-    if (!role.trim()) {
-      toast.error("Veuillez sélectionner un rôle.");
-      return false;
-    }
-    return true;
-  };
+    fetchUser();
+  }, [id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,18 +55,18 @@ const FormEditeUser = () => {
       toast.error("Identifiant introuvable.");
       return;
     }
-    if (!validateForm()) return;
 
-    setLoading(true);
     try {
+      console.log(formData);
       await updateUser(id, formData);
       toast.success("Utilisateur mis à jour avec succès !");
       setTimeout(() => navigate("/users"), 1500);
-    } catch (error) {
-      toast.error("Erreur lors de la mise à jour.");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast.error(
+        error.response?.data?.message || "Erreur lors de la mise à jour."
+      );
       console.error(error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -108,7 +119,7 @@ const FormEditeUser = () => {
               >
                 <option value="">Sélectionner un rôle</option>
                 <option value="admin">Admin</option>
-                <option value="user">Utilisateur</option>
+                <option value="employee">Utilisateur</option>
               </select>
             </div>
 
@@ -116,9 +127,9 @@ const FormEditeUser = () => {
               <button
                 type="submit"
                 className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                disabled={loading}
+                disabled={isLoading}
               >
-                {loading ? "Mise à jour..." : "Mettre à jour"}
+                {isLoading ? "Mise à jour..." : "Mettre à jour"}
               </button>
               <button
                 type="button"

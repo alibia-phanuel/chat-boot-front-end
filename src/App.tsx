@@ -1,6 +1,6 @@
 import { ToastContainer } from "react-toastify";
-import AuthGuard from "../components/AuthGuard";
 import "react-toastify/dist/ReactToastify.css";
+// import ProtectedRoute from "../components/ProtectedRoute";
 import "./index.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 // Action lier au utilisateurs
@@ -11,6 +11,7 @@ import FormAddUser from "../components/FormAddUser";
 import Products from "../components/pages/Products";
 import FormEditeProduct from "../components/FormEditeProduct";
 import FormAddProduct from "../components/FormAddProduct";
+import AuthGuard from "../components/AuthGuard";
 // FIN: Action lier au produits----
 import FormEditQuestion from "../components/FormEditQuestion";
 import QuestionsReponses from "../components/pages/QuestionsReponses";
@@ -29,7 +30,6 @@ function App() {
         <Routes>
           {/* Route accessible sans authentification */}
           <Route path="/" element={<Login />} />
-
           {/* Routes protégées */}
           <Route
             path="/dashboard"
@@ -40,7 +40,7 @@ function App() {
             }
           />
           <Route
-            path="/Stocks"
+            path="/stocks"
             element={
               <AuthGuard>
                 <Stocks />
@@ -48,7 +48,7 @@ function App() {
             }
           />
           <Route
-            path="/Message"
+            path="/message"
             element={
               <AuthGuard>
                 <Message />
@@ -56,7 +56,7 @@ function App() {
             }
           />
           <Route
-            path="/ShopifyOrders"
+            path="/shopifyorders"
             element={
               <AuthGuard>
                 <ShopifyOrders />
@@ -64,7 +64,7 @@ function App() {
             }
           />
           <Route
-            path="/Chatboot"
+            path="/chatboot"
             element={
               <AuthGuard>
                 <Chatboot />
@@ -144,7 +144,7 @@ function App() {
             }
           />
           <Route
-            path="/facebookIdPost"
+            path="/facebookidpost"
             element={
               <AuthGuard>
                 <PostsFacebook />

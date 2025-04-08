@@ -2,8 +2,26 @@ import { useState, useEffect } from "react";
 import { FaSpinner } from "react-icons/fa"; // Icône de chargement
 import Layout from "../../components/pages/Layout";
 import LayouSystem from "../share/LayoutSystem";
-
+import  useUserStore  from "../../stores/userStore";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 const ShopifyOrders = () => {
+  const fetchUser = useUserStore((state) => state.fetchUser);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await fetchUser();
+      } catch (error) {
+        toast.error("Impossible de récupérer les informations utilisateur.");
+        console.error(error);
+        navigate("/");
+      }
+    };
+
+    fetchData();
+  }, [fetchUser, navigate]);
   const [loading, setLoading] = useState(true); // État pour gérer le loader
   const [showMessage, setShowMessage] = useState(false); // État pour gérer l'affichage du message
 

@@ -13,7 +13,7 @@ interface ErrorResponse {
   url?: string;
 }
 export const getProducts = async (): Promise<ProductList | ErrorResponse> => {
-  const baseURL = "https://chat-boot-92e040193633.herokuapp.com/";
+  const baseURL = "http://localhost:3000/";
 
   try {
     const response = await axios.get<ProductList>(`${baseURL}products`, {

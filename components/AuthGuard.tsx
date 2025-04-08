@@ -1,3 +1,4 @@
+import React from "react";
 import { ReactNode, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -9,9 +10,9 @@ const AuthGuard = ({ children }: AuthGuardProps) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const user = localStorage.getItem("user");
+    const token = localStorage.getItem("token");
 
-    if (!user) {
+    if (!token) {
       navigate("/");
     }
   }, [navigate]);

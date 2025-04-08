@@ -6,29 +6,34 @@ import { FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LayoutSystem from "../components/share/LayoutSystem";
-import { getProducts } from "../src/api/products/ProductList";
 import { deleteProduct } from "../src/api/products/DeleteProduct";
-import { Product } from "../src/type/type";
+import axios from "axios";
+import useUserStore from "../stores/userStore";
+type Product = {
+  id: number;
+  uuid: string;
+  keyword: string;
+  name: string;
+  price: number;
+  deliveryFee: number;
+  extraQuestion: string;
+  creator: {
+    name: string;
+    role: string;
+  };
+};
+
 const ProductList = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const user = useUserStore((state) => state.user);
   useEffect(() => {
     const fetchProducts = async () => {
-      setLoading(true);
-      setError(null); // Réinitialiser l'erreur avant chaque requête
-
       try {
-        const result = await getProducts();
-        if ("message" in result) {
-          // Si le résultat est une erreur (type ErrorResponse)
-          toast.error(result.message);
-        } else {
-          // Si le résultat est un tableau de produits
-          setProducts(result);
-        }
+        const response = await axios.get("http://localhost:3000/products");
+        setProducts(response.data); // On récupère les données
       } catch (err) {
-        toast.error("Une erreur inconnue est survenue");
+        toast.error("Erreur lors de la récupération des données");
         console.log(err);
       } finally {
         setLoading(false);
@@ -38,20 +43,17 @@ const ProductList = () => {
     fetchProducts();
   }, []);
 
-  const handleDelete = async (uuid: string) => {
-    const userString = localStorage.getItem("user"); // Récupère la valeur du localStorage
-    const user = userString ? JSON.parse(userString) : null; // Vérifie si userString est null avant de parser
+  const handleDelete = async (id: number) => {
     const role = user?.role ?? "inconnu"; // Si user est null, on assigne "inconnu" par défaut
     if (role !== "admin") {
       toast.error("Vous n'êtes pas autorisé à supprimer ce produit !");
       return; // Arrête l'exécution si l'utilisateur n'est pas admin
     }
-
     if (confirm("Voulez-vous vraiment supprimer ce produit ?")) {
       try {
-        await deleteProduct(uuid);
+        await deleteProduct(id);
         setProducts((prevProducts) =>
-          prevProducts.filter((product) => product.uuid !== uuid)
+          prevProducts.filter((product) => product.id !== id)
         );
         toast.success("Produit supprimé avec succès !");
       } catch (error) {
@@ -66,11 +68,6 @@ const ProductList = () => {
       <div className="flex justify-center items-center h-screen">
         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-red-500"></div>
       </div>
-    );
-
-  if (error)
-    return (
-      <p className="text-red-500 h-full text-center font-semibold">{error}</p>
     );
 
   return (
@@ -100,6 +97,13 @@ const ProductList = () => {
                   </th>
 
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    autheur
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Role
+                  </th>
+
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
@@ -114,7 +118,12 @@ const ProductList = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       {product.price} FCFA
                     </td>
-
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {product.creator.name}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {product.creator.role}
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap space-x-2 flex">
                       <Link
                         to={`/products/edit/${product.uuid}`}
@@ -125,7 +134,7 @@ const ProductList = () => {
                       </Link>
                       <button
                         className="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 flex items-center gap-2"
-                        onClick={() => handleDelete(product.uuid)}
+                        onClick={() => handleDelete(product.id)}
                       >
                         <FaTrash />
                         Supprimer

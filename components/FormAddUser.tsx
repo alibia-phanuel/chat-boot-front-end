@@ -4,6 +4,8 @@ import { useState } from "react";
 import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import Layout from "./pages/Layout";
+// import { useDropzone } from "react-dropzone";
+import { FiTrash2 } from "react-icons/fi";
 interface User {
   name: string;
   email: string;
@@ -18,8 +20,29 @@ const FormAddUser = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "user",
+    role: "employee",
   });
+  const [images, setImages] = useState<{ url: string; name: string }[]>([]);
+
+  // const handleDrop = (acceptedFiles: File[]) => {
+  //   if (images.length + acceptedFiles.length > 2) return;
+  //   const newImages = acceptedFiles.map((file) => ({
+  //     url: URL.createObjectURL(file),
+  //     name: file.name,
+  //   }));
+  //   setImages((prevImages) => [...prevImages, ...newImages]);
+  // };
+
+  // const { getRootProps, getInputProps } = useDropzone({
+  //   onDrop: handleDrop,
+  //   accept: { "image/*": [] },
+  //   multiple: true,
+  //   maxFiles: 1,
+  // });
+
+  const removeImage = (imageName: string) => {
+    setImages(images.filter((img) => img.name !== imageName));
+  };
 
   // Fonction pour gérer le changement des champs
   const handleChange = (
@@ -61,7 +84,7 @@ const FormAddUser = () => {
 
     try {
       const response = await axios.post(
-        "https://chat-boot-92e040193633.herokuapp.com/users",
+        "http://localhost:3000/users",
         formData,
 
         {
@@ -77,7 +100,7 @@ const FormAddUser = () => {
         email: "",
         password: "",
         confirmPassword: "",
-        role: "user",
+        role: "employee",
       });
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
@@ -92,7 +115,7 @@ const FormAddUser = () => {
   return (
     <Layout>
       <LayoutSystem>
-        <div className="p-6 max-w-2xl mx-auto relative shadow-lg top-[15%]">
+        <div className="p-6 max-w-2xl mx-auto relative shadow-lg top-[10%]">
           <h1 className="text-2xl font-bold mb-2">Utilisateurs</h1>
           <div className="text-sm text-gray-600 mb-4">
             Ajouter un nouvel utilisateur
@@ -100,7 +123,45 @@ const FormAddUser = () => {
 
           <div className="bg-white rounded-lg p-4">
             <div className="p-4">
-              <form className="space-y-4" onSubmit={handleSubmit}>
+              <form className="space-y-4 relative" onSubmit={handleSubmit}>
+                {/* IMAGE A TRAITER PLUS TARD 
+
+
+            <div className=" hidden">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Photo de profile de l'utilisateur
+                  </label>
+                  <div
+                    {...getRootProps()}
+                    className="border-2 border-dashed p-4 text-center cursor-pointer"
+                  >
+                    <input {...getInputProps()} />
+                    <p>
+                      Glissez-déposez vos images ici, ou cliquez pour
+                      sélectionner
+                    </p>
+                  </div>
+                </div>
+                */}
+                <div className="flex hidden absolute bottom-[100%] left-[70%]  justify-evenly mt-6">
+                  {images.map((image) => (
+                    <div key={image.name} className="relative">
+                      <img
+                        src={image.url}
+                        alt={image.name}
+                        className="w-full  h-20 object-cover rounded"
+                      />
+                      <button
+                        type="button"
+                        className="absolute top-1  bg-red-500 text-white p-1 rounded-full"
+                        onClick={() => removeImage(image.name)}
+                      >
+                        <FiTrash2 size={16} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                {/* IMAGE A TRAITER PLUS TARD */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Nom
@@ -172,7 +233,7 @@ const FormAddUser = () => {
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="admin">Administrateur</option>
-                    <option value="user">Employé</option>
+                    <option value="employee">Employé</option>
                   </select>
                 </div>
 

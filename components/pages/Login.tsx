@@ -1,64 +1,39 @@
+// imports externes
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import axios from "axios";
+import "react-toastify/dist/ReactToastify.css";
+// imports internes
+import { login } from "../../services/authService";
 import bigLogo from "../../public/assets/big-logo.png";
 import Logo from "../../public/assets/logo.png";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-
-interface User {
-  uuid: string;
-  name: string;
-  email: string;
-  role: string;
-}
-
 const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isError, setIsError] = useState<boolean>(false);
-  const [message, setMessage] = useState<string>("");
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // Validation des champs
-    if (!email || !password) {
-      setIsError(true);
-      setMessage("Tous les champs sont obligatoires !");
-      return;
-    }
-
-    setIsLoading(true);
-    setIsError(false);
-    setMessage("");
+    setIsLoading(true); // ✅ Active l'état avant l'appel API
 
     try {
-      const response = await axios.post<User>(
-        `https://chat-boot-92e040193633.herokuapp.com/login`,
-        { email, password },
-        { withCredentials: true }
-      );
-
-      // Stocker les données utilisateur dans localStorage
-      localStorage.setItem("user", JSON.stringify(response.data));
-
-      // Redirection vers le dashboard
+      const data = await login(email, password);
+      localStorage.setItem("token", data.token);
+      toast.success("Connexion réussie !");
       navigate("/dashboard");
     } catch (error: unknown) {
-      setIsError(true);
-
       if (axios.isAxiosError(error)) {
-        // Vérifie si error.response existe et si data est un objet avec un message
         const errorMessage =
           error.response?.data && typeof error.response.data === "object"
             ? (error.response.data as { message?: string }).message
             : "Une erreur est survenue.";
 
-        setMessage(errorMessage || "Une erreur est survenue.");
+        toast.error(errorMessage || "Une erreur est survenue.");
       } else {
-        setMessage("Une erreur inattendue est survenue.");
+        toast.error("Une erreur inattendue est survenue.");
       }
     } finally {
       setIsLoading(false);
@@ -68,7 +43,7 @@ const Login = () => {
   return (
     <section className="min-h-screen w-full flex items-center justify-center px-4">
       <div className="container flex bg-yellow-400 px-4 justify-around items-center p rounded-lg py-[100px] shadow">
-        <div className="w-[50%] max-md:hidden">
+        <div className="w-[50%] hidden md:block">
           <img src={bigLogo} alt="grand Logo" />
         </div>
 
@@ -90,9 +65,6 @@ const Login = () => {
                     Bienvenue à nouveau ! Veuillez saisir vos coordonnées.
                   </p>
                 </div>
-              </div>
-              <div className="w-full text-center">
-                {isError && <p className="text-red-500">{message}</p>}
               </div>
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2">

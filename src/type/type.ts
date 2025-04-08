@@ -1,5 +1,16 @@
 // Interface pour l'utilisateur
 // Type pour une liste de produits
+export interface Product {
+  id: number;
+  uuid: string;
+  keyword: string;
+  name: string;
+  price: number;
+  deliveryFee: number;
+  extraQuestion: string;
+  images: string[];
+}
+
 export interface User {
   id: number;
   uuid: string;
@@ -7,9 +18,15 @@ export interface User {
   email: string;
   password: string; // ⚠️ Idéalement, ne pas exposer le mot de passe côté frontend
   role: "admin" | "user"; // Tu peux adapter en fonction des rôles possibles
+  profilePicture: string;
   signupDate: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface CREATOR {
+  name: string;
+  role: "admin" | "employee";
 }
 
 // Interface pour un produit
@@ -24,7 +41,7 @@ export interface Faqs {
   id: number;
   question: string;
   answer: string;
-  User: User;
+  User: CREATOR;
 }
 
 export interface UpdateProductData {
@@ -38,7 +55,6 @@ export interface UpdateProductData {
 }
 export type UpdateProductDataList = {
   id?: number;
-
   name: string;
   price: number;
   shippingFee: number;

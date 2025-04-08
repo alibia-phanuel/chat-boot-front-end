@@ -1,8 +1,9 @@
 import Layout from "./pages/Layout";
 import { UpdateFaqsDatas } from "@/api/faqs/UpdateQuestion";
+import { getQuestionById } from "../src/api/faqs/getFaq";
 import "react-toastify/dist/ReactToastify.css";
 import LayoutSystem from "./share/LayoutSystem";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 interface Faqs {
@@ -16,22 +17,35 @@ const FormEditQuestion = () => {
     question: "",
     answer: "",
   });
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (!id) return;
+      setIsLoading(true);
+      try {
+        const userData = await getQuestionById(id);
+        if (!userData) {
+          toast.error("Utilisateur introuvable.");
+          return;
+        }
+        setFormData({
+          question: userData.question || "",
+          answer: userData.answer || "",
+        });
+      } catch (error) {
+        toast.error(
+          "Erreur lors du chargement des informations de l'utilisateur."
+        );
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  // Fonction de validation avec Toasts
-  const validateForm = (): boolean => {
-    if (!formData.question.trim()) {
-      toast.error("La question est requise.");
-      return false;
-    }
-    if (!formData.answer.trim()) {
-      toast.error("La réponse est requise.");
-      return false;
-    }
-    return true;
-  };
+    fetchUser();
+  }, [id]);
 
   // Gestion des changements des inputs
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,9 +62,7 @@ const FormEditQuestion = () => {
       toast.error("Identifiant introuvable.");
       return;
     }
-    if (!validateForm()) return;
 
-    setLoading(true);
     try {
       const response = await UpdateFaqsDatas(id, formData);
       console.log("Réponse serveur :", response);
@@ -105,9 +117,9 @@ const FormEditQuestion = () => {
                   <button
                     type="submit"
                     className=" px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
-                    disabled={loading}
+                    disabled={isLoading}
                   >
-                    {loading ? "Modification..." : "Modifier !"}
+                    {isLoading ? "Modification..." : "Modifier !"}
                   </button>
                   <button
                     type="button"

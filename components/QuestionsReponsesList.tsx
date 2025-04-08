@@ -6,21 +6,31 @@ import { FaEdit } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
 import LayoutSystem from "../components/share/LayoutSystem";
-import { getGetQuestion } from "../src/api/faqs/QuestionList";
 import { deleteQuestion } from "../src/api/faqs/DeleteQuestion";
-import { Faqs } from "../src/type/type";
-const QuestionsReponsesList = () => {
-  const [faqs, setFaqs] = useState<Faqs[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+import axios from "axios";
+import useUserStore from "../stores/userStore";
+type Question = {
+  id: string;
+  question: string;
+  answer: string;
+  creator: {
+    name: string;
+    role: string;
+  };
+};
 
+const QuestionsReponsesList = () => {
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const user = useUserStore((state) => state.user);
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const data = await getGetQuestion();
-        setFaqs(data);
+        const response = await axios.get("http://localhost:3000/question");
+        setQuestions(response.data); // On récupère les données
       } catch (err) {
-        toast.error("Impossible de récupérer les Questions.");
-        console.error(err);
+        toast.error("Erreur lors de la récupération des données");
+        console.log(err);
       } finally {
         setLoading(false);
       }
@@ -28,9 +38,8 @@ const QuestionsReponsesList = () => {
 
     fetchQuestions();
   }, []);
-  const handleDelete = async (id: number) => {
-    const userString = localStorage.getItem("user"); // Récupère la valeur du localStorage
-    const user = userString ? JSON.parse(userString) : null; // Vérifie si userString est null avant de parser
+
+  const handleDelete = async (id: string) => {
     const role = user?.role ?? "inconnu"; // Si user est null, on assigne "inconnu" par défaut
     if (role !== "admin") {
       toast.error("Vous n'êtes pas autorisé à supprimer cet enssemble !");
@@ -39,7 +48,7 @@ const QuestionsReponsesList = () => {
     if (confirm("Voulez-vous vraiment supprimer cet enssemble  ?")) {
       try {
         deleteQuestion(id);
-        setFaqs(faqs.filter((faq) => faq.id !== id));
+        setQuestions(questions.filter((faq) => faq.id !== id));
         toast.success("L'enssemble a été supprimé avec succès !");
       } catch (error) {
         toast.error("Erreur lors de la suppression du produit !");
@@ -82,36 +91,32 @@ const QuestionsReponsesList = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Réponses
                 </th>
-                {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Auteur
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Rôle
-                </th> */}
+                </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {faqs.map((faq, index) => (
-                <tr key={faq.id} className="hover:bg-gray-50">
+              {questions.map((q, index) => (
+                <tr key={q.answer} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{q.answer}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{q.question}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {faq.question}
+                    {q.creator.name}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {faq.answer} FCFA
+                    {q.creator.role}
                   </td>
-                  {/* <td className="px-6 py-4 whitespace-nowrap">
-                    {faq.User?.name}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {faq.User?.role}
-                  </td> */}
                   <td className="px-6 flex py-4 whitespace-nowrap space-x-2">
                     <Link
-                      to={`/questions-reponses/edit/${faq.id}`}
+                      to={`/questions-reponses/edit/${q.id}`}
                       className="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 flex items-center  gap-2"
                     >
                       <FaEdit />
@@ -119,7 +124,7 @@ const QuestionsReponsesList = () => {
                     </Link>
                     <button
                       className="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 flex items-center  gap-2"
-                      onClick={() => handleDelete(faq.id)}
+                      onClick={() => handleDelete(q.id)}
                     >
                       <FaTrash />
                       Supprimer
