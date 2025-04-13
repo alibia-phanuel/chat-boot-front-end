@@ -1,75 +1,148 @@
-import { useState, useEffect } from "react";
-import Layout from "../../components/pages/Layout";
-import LayouSystem from "../share/LayoutSystem";
-import useUserStore from "../../stores/userStore";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
-import fetchPosts from "@/api/facebook/GetApiPost";
-import ClientComponent from "../ClientComponent";
-type Post = {
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+interface Post {
   id: string;
   message: string;
   created_time: string;
-  // ... autres propriétés selon tes données
-};
-const PostsFacebook = () => {
-  const [loading, setLoading] = useState(true);
-  const [postsPage1, setPostsPage1] = useState<Post[]>([]);
-  const [postsPage2, setPostsPage2] = useState<Post[]>([]);
-  const fetchUser = useUserStore((state) => state.fetchUser);
-  const navigate = useNavigate();
+}
 
-  const pageId1 = "389037834288932";
-  const pageId2 = "101051433077608";
-  const accessTokenPage1 = "EAAZASXPS0t6cBO4..."; // tronqué pour lisibilité
-  const accessTokenPage2 = "EAAZASXPS0t6cBO9...";
+import Layout from "../../components/pages/Layout";
+import LayouSystem from "../share/LayoutSystem";
+
+// Format de date en français
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  const options: Intl.DateTimeFormatOptions = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  };
+  return new Intl.DateTimeFormat("fr-FR", options).format(date);
+};
+
+const PostsFacebook = () => {
+  const [topQualitesPosts, setTopQualitesPosts] = useState<Post[]>([]);
+  const [afrikaGadgetPosts, setAfrikaGadgetPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchAllData = async () => {
+    const fetchPosts = async () => {
       try {
-        await fetchUser(); // vérifie l’utilisateur
-        const [posts1, posts2] = await Promise.all([
-          fetchPosts(pageId1, accessTokenPage1),
-          fetchPosts(pageId2, accessTokenPage2),
+        const [topQualitesRes, afrikagadgetRes] = await Promise.all([
+          axios.get("http://localhost:3000/facebook/posts/topqualites"),
+          axios.get("http://localhost:3000/facebook/posts/afrikagadget"),
         ]);
-        setPostsPage1(posts1);
-        setPostsPage2(posts2);
+
+        setTopQualitesPosts(topQualitesRes.data.data);
+        setAfrikaGadgetPosts(afrikagadgetRes.data.data);
       } catch (error) {
-        toast.error("❌ Une erreur est survenue.");
-        console.error(error);
-        navigate("/");
+        console.error("Erreur lors du chargement des posts :", error);
       } finally {
-        setTimeout(() => {
-          setLoading(false);
-        }, 1000); // Ajoute le petit délai visuel
+        setLoading(false);
       }
     };
 
-    fetchAllData();
-  }, [fetchUser, navigate]);
-
-  if (loading) {
-    return (
-      <Layout>
-        <LayouSystem>
-          <div className="flex justify-center items-center h-full">
-            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-red-500"></div>
-          </div>
-        </LayouSystem>
-      </Layout>
-    );
-  }
+    fetchPosts();
+  }, []);
 
   return (
     <Layout>
       <LayouSystem>
-        <div className="flex-wrap flex justify-center h-full">
-          <div className="container h-full text-center  flex justify-center items-center text-red-400">
-            <div className="flex  justify-between  w-full h-full max-md:flex-wrap">
-              <ClientComponent posts={postsPage1} numberPage={1} />
-              <ClientComponent posts={postsPage2} numberPage={2} />
+        <div className="max-w-6xl mx-auto p-4">
+          <h1 className="text-2xl font-bold mb-6 text-center">
+            Publications Facebook
+          </h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Colonne Top Qualités */}
+            <div>
+              <h2 className="text-xl font-semibold mb-4 text-blue-600 text-center">
+                Top Qualités
+              </h2>
+              <div className="space-y-4">
+                {topQualitesPosts.map((post) => (
+                  <div
+                    key={post.id}
+                    className="bg-white border border-gray-200 shadow-md rounded-xl overflow-hidden"
+                  >
+                    <table className="min-w-full text-sm">
+                      <thead className="bg-gray-100 text-left text-gray-700">
+                        <tr>
+                          <th className="px-4 py-2 border-b">Clé</th>
+                          <th className="px-4 py-2 border-b">Valeur</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td className="px-4 py-2 border-b text-gray-600">
+                            ID Produit
+                          </td>
+                          <td className="px-4 py-2 border-b text-gray-800">
+                            {post.id}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="px-4 py-2 text-gray-600">Date</td>
+                          <td className="px-4 py-2 text-gray-800">
+                            Publié le {formatDate(post.created_time)}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Colonne Afrika Gadget */}
+            <div>
+              <h2 className="text-xl font-semibold mb-4 text-green-600 text-center">
+                Afrika Gadget
+              </h2>
+              <div className="space-y-4">
+                {afrikaGadgetPosts.map((post) => (
+                  <div
+                    key={post.id}
+                    className="bg-white border border-gray-200 shadow-md rounded-xl overflow-hidden"
+                  >
+                    <table className="min-w-full text-sm">
+                      <thead className="bg-gray-100 text-left text-gray-700">
+                        <tr>
+                          <th className="px-4 py-2 border-b">Clé</th>
+                          <th className="px-4 py-2 border-b">Valeur</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td className="px-4 py-2 border-b text-gray-600">
+                            ID Produit
+                          </td>
+                          <td className="px-4 py-2 border-b text-gray-800">
+                            {post.id}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="px-4 py-2 text-gray-600">Date</td>
+                          <td className="px-4 py-2 text-gray-800">
+                            Publié le {formatDate(post.created_time)}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
+          {loading && (
+            <div className="flex justify-center items-center  w-full ">
+              <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-red-500"></div>
+            </div>
+          )}
         </div>
       </LayouSystem>
     </Layout>

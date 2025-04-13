@@ -1,15 +1,16 @@
+// ChatbootContainer.tsx (version corrigée)
 import LayoutSystem from "./share/LayoutSystem";
 import { ScrollArea } from "../components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import { GrSend } from "react-icons/gr";
 import axios from "axios";
-
 import { motion } from "framer-motion";
 import logo from "../public/assets/ppone.png";
 import { FaImage } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import React from "react";
 import { toast } from "react-toastify";
+
 interface Contact {
   senderId: string;
   id: string;
@@ -20,10 +21,11 @@ interface Contact {
 }
 
 interface Message {
-  id: number;
+  id: number | string;
   sender: "user" | "bot";
   text: string;
   images?: string[];
+  temp?: boolean;
 }
 
 const ChatbootContainer: React.FC = () => {
@@ -90,7 +92,6 @@ const ChatbootContainer: React.FC = () => {
           )}/${encodeURIComponent(currentUserId)}`
         );
         const data = response.data;
-        console.log(data);
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const formattedMessages = data.map((msg: any) => {
@@ -104,7 +105,7 @@ const ChatbootContainer: React.FC = () => {
               ? [
                   isUser
                     ? msg.imagePath
-                    : `https://9a57-154-126-169-74.ngrok-free.app${msg.imagePath}`,
+                    : `https://3ee6-154-126-169-74.ngrok-free.app${msg.imagePath}`,
                 ]
               : undefined,
           };
@@ -119,24 +120,16 @@ const ChatbootContainer: React.FC = () => {
   const sendMessage = async () => {
     const trimmedInput = input.trim();
     const recipientNumber = selectedContact?.phoneNumber;
-    const conversationId = selectedContact?.id; // Assurez-vous que cette info est disponible
-    const senderId = "+15551443267"; // Numéro WhatsApp du destinataire
-    const whatsappNumber = recipientNumber; // Le client ou l'agent
+    const conversationId = selectedContact?.id;
+    const senderId = "+15551443267";
+    const whatsappNumber = recipientNumber;
 
     if (!recipientNumber || !conversationId) {
       alert("Erreur: Le numéro ou la conversation est manquante");
       return;
     }
 
-    if (!trimmedInput) {
-      console.log("Aucun message à envoyer");
-      return;
-    }
-
-    if (!trimmedInput && images.length === 0) {
-      console.log("Aucun message à envoyer");
-      return;
-    }
+    // ✅ Empêche l’envoi seulement s’il n’y a ni texte ni image
     if (!trimmedInput && images.length === 0) {
       console.log("Aucun message à envoyer");
       return;
@@ -151,13 +144,16 @@ const ChatbootContainer: React.FC = () => {
         });
 
         if (trimmedInput) {
-          formData.append("caption", trimmedInput);
+          formData.append("caption", trimmedInput); // facultatif
+        }
+        if (!whatsappNumber || !conversationId) {
+          alert("Erreur: Le numéro WhatsApp ou la conversation est manquante");
+          return;
         }
 
-        // 👉 Ces champs sont obligatoires côté backend
         formData.append("senderId", senderId);
-        formData.append("whatsappNumber", selectedContact?.phoneNumber);
-        formData.append("conversationId", selectedContact?.id);
+        formData.append("whatsappNumber", whatsappNumber);
+        formData.append("conversationId", conversationId);
 
         const res = await axios.post(
           "http://localhost:3000/send-media",
@@ -172,6 +168,7 @@ const ChatbootContainer: React.FC = () => {
         console.log("Média envoyé avec succès :", res.data);
         toast.success("Message envoyé avec succès");
       } else {
+        // ✅ Ici on sait que trimmedInput est non vide
         const res = await axios.post("http://localhost:3000/send-text", {
           to: recipientNumber,
           message: trimmedInput,
@@ -184,14 +181,12 @@ const ChatbootContainer: React.FC = () => {
         toast.success("Message envoyé avec succès");
       }
 
-      // Réinitialiser après envoi
       setInput("");
       setImages([]);
     } catch (error) {
       console.error("Erreur lors de l’envoi :", error);
     }
   };
-
   return (
     <LayoutSystem>
       <div className="h-[calc(100vh-70px)] flex justify-center">
@@ -243,6 +238,7 @@ const ChatbootContainer: React.FC = () => {
                   <p className="text-sm italic">En ligne</p>
                 </div>
               </div>
+
               <ScrollArea className="flex-1 p-4">
                 {messages.map((msg) => (
                   <motion.div
@@ -255,15 +251,19 @@ const ChatbootContainer: React.FC = () => {
                         : "bg-gray-200 text-gray-900 self-start"
                     }`}
                   >
-                    <p>{msg.text}</p>
-                    {msg.images?.map((img, index) => (
-                      <img
-                        key={index}
-                        src={img}
-                        alt=""
-                        className="mt-2 w-40 rounded"
-                      />
-                    ))}
+                    <p>{msg.text || ""}</p>
+                    {msg.images && msg.images.length > 0 && (
+                      <div className="mt-2 space-y-2">
+                        {msg.images.map((img, index) => (
+                          <img
+                            key={index}
+                            src={img}
+                            alt={`image-${index}`}
+                            className="w-40 rounded border border-red-500"
+                          />
+                        ))}
+                      </div>
+                    )}
                   </motion.div>
                 ))}
               </ScrollArea>
