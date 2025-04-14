@@ -30,7 +30,9 @@ const ProductList = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/products");
+        const response = await axios.get(
+          "https://chat-boot-92e040193633.herokuapp.com/products"
+        );
         setProducts(response.data); // On récupère les données
       } catch (err) {
         toast.error("Erreur lors de la récupération des données");

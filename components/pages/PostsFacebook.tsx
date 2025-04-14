@@ -34,8 +34,10 @@ const PostsFacebook = () => {
     const fetchPosts = async () => {
       try {
         const [topQualitesRes, afrikagadgetRes] = await Promise.all([
-          axios.get("http://localhost:3000/facebook/posts/topqualites"),
-          axios.get("http://localhost:3000/facebook/posts/afrikagadget"),
+          axios.get(
+            "https://chat-boot-92e040193633.herokuapp.com/facebook/posts/topqualites"
+          ),
+          axios.get("https://chat-boot-92e040193633.herokuapp.com/facebook/posts/afrikagadget"),
         ]);
 
         setTopQualitesPosts(topQualitesRes.data.data);
