@@ -112,7 +112,7 @@ const FormEditeProduct = () => {
 
     try {
       const response = await axios.patch(
-        `http://localhost:3000/products/${id}`,
+        `https://chat-boot-92e040193633.herokuapp.com/products/${id}`,
         productData,
         {
           headers: {

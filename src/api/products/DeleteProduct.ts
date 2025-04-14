@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
 export const deleteProduct = async (id: number) => {
-  const baseURL = "http://localhost:3000";
+  const baseURL = "https://chat-boot-92e040193633.herokuapp.com";
   try {
     const response = await axios.delete(`${baseURL}/products/${id}`);
     return response.data;

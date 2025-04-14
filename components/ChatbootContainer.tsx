@@ -47,7 +47,9 @@ const ChatbootContainer: React.FC = () => {
   useEffect(() => {
     const fetchContacts = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/messages"); // adapte l’URL si besoin
+        const response = await axios.get(
+          "https://chat-boot-92e040193633.herokuapp.com/messages"
+        ); // adapte l’URL si besoin
         const data = response.data;
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -87,7 +89,7 @@ const ChatbootContainer: React.FC = () => {
         alert("clique encore");
       } else {
         const response = await axios.get(
-          `http://localhost:3000/${encodeURIComponent(
+          `https://chat-boot-92e040193633.herokuapp.com/${encodeURIComponent(
             selectedContact.phoneNumber
           )}/${encodeURIComponent(currentUserId)}`
         );

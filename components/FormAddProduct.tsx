@@ -72,7 +72,7 @@ const FormAddProduct = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/products",
+        "https://chat-boot-92e040193633.herokuapp.com/products",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
