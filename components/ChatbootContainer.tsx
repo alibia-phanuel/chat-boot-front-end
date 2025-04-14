@@ -51,7 +51,7 @@ const ChatbootContainer: React.FC = () => {
           "https://chat-boot-92e040193633.herokuapp.com/messages"
         ); // adapte l’URL si besoin
         const data = response.data;
-
+        console.log(data);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const formattedContacts = data.map((item: any) => ({
           id: item.id.toString(),
@@ -158,7 +158,7 @@ const ChatbootContainer: React.FC = () => {
         formData.append("conversationId", conversationId);
 
         const res = await axios.post(
-          "http://localhost:3000/send-media",
+          "https://chat-boot-92e040193633.herokuapp.com/send-media",
           formData,
           {
             headers: {
@@ -171,13 +171,16 @@ const ChatbootContainer: React.FC = () => {
         toast.success("Message envoyé avec succès");
       } else {
         // ✅ Ici on sait que trimmedInput est non vide
-        const res = await axios.post("http://localhost:3000/send-text", {
-          to: recipientNumber,
-          message: trimmedInput,
-          conversationId,
-          senderId,
-          whatsappNumber,
-        });
+        const res = await axios.post(
+          "https://chat-boot-92e040193633.herokuapp.com/send-text",
+          {
+            to: recipientNumber,
+            message: trimmedInput,
+            conversationId,
+            senderId,
+            whatsappNumber,
+          }
+        );
 
         console.log("Texte envoyé avec succès :", res.data);
         toast.success("Message envoyé avec succès");
