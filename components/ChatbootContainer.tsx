@@ -105,7 +105,7 @@ const ChatbootContainer: React.FC = () => {
               ? [
                   isUser
                     ? msg.imagePath
-                    : `https://3ee6-154-126-169-74.ngrok-free.app${msg.imagePath}`,
+                    : `https://chat-boot-92e040193633.herokuapp.com${msg.imagePath}`,
                 ]
               : undefined,
           };
