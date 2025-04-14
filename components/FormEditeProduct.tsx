@@ -8,7 +8,7 @@ import Layout from "./pages/Layout";
 import "react-toastify/dist/ReactToastify.css";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-const baseUrl = "http://localhost:3000";
+const baseUrl = "https://chat-boot-92e040193633.herokuapp.com";
 type FileWithUrl = File & { url: string; name: string; path?: string };
 
 const FormEditeProduct = () => {
