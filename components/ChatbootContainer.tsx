@@ -10,7 +10,7 @@ import { FaImage } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import React from "react";
 import { toast } from "react-toastify";
-
+import avatar from "../public/assets/ppone.png";
 interface Contact {
   senderId: string;
   id: string;
@@ -263,10 +263,7 @@ const ChatbootContainer: React.FC = () => {
                   }`}
                 >
                   <Avatar>
-                    <AvatarImage
-                      src="../src/asset/logo.png"
-                      className="w-10 h-10"
-                    />
+                    <AvatarImage src={avatar} className="w-10 h-10" />
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
                   <div className="ml-3 flex-1">
