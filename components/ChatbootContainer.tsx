@@ -1,13 +1,11 @@
-import { io } from "socket.io-client";
-
 // ChatbootContainer.tsx (version corrigée)
+import { io } from "socket.io-client";
 import LayoutSystem from "./share/LayoutSystem";
 import { ScrollArea } from "../components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import { GrSend } from "react-icons/gr";
 import axios from "axios";
 import { motion } from "framer-motion";
-import logo from "../public/assets/ppone.png";
 import { FaImage } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import React from "react";
@@ -34,7 +32,6 @@ const ChatbootContainer: React.FC = () => {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
-
   // information de mon coter
   const [input, setInput] = useState<string>("");
   const [images, setImages] = useState<File[]>([]);
@@ -140,12 +137,8 @@ const ChatbootContainer: React.FC = () => {
   }, [selectedContact]);
 
   const openChat = async (contact: Contact) => {
-    // ➔ Reset unreadCount via setContacts
-    setContacts((prev) =>
-      prev.map((c) => (c.id === contact.id ? { ...c, unreadCount: 0 } : c))
-    );
     setSelectedContact(contact);
-    // contact.unreadCount = 0;
+    contact.unreadCount = 0;
     console.log(selectedContact?.phoneNumber);
     // alert(selectedContact?.id);
     const currentUserId = "+15551443267";
@@ -192,7 +185,7 @@ const ChatbootContainer: React.FC = () => {
     const senderId = "+15551443267";
     const whatsappNumber = recipientNumber;
 
-    if (!recipientNumber || !conversationId) {
+    if (!whatsappNumber || !conversationId) {
       alert("Erreur: Le numéro ou la conversation est manquante");
       return;
     }
@@ -224,7 +217,7 @@ const ChatbootContainer: React.FC = () => {
         formData.append("conversationId", conversationId);
 
         const res = await axios.post(
-          "https://chat-boot-92e040193633.herokuapp.com/send-media",
+          "http://localhost:3000/send-media",
           formData,
           {
             headers: {
@@ -237,16 +230,13 @@ const ChatbootContainer: React.FC = () => {
         toast.success("Message envoyé avec succès");
       } else {
         // ✅ Ici on sait que trimmedInput est non vide
-        const res = await axios.post(
-          "https://chat-boot-92e040193633.herokuapp.com/send-text",
-          {
-            to: recipientNumber,
-            message: trimmedInput,
-            conversationId,
-            senderId,
-            whatsappNumber,
-          }
-        );
+        const res = await axios.post("http://localhost:3000/send-text", {
+          to: whatsappNumber,
+          message: trimmedInput,
+          conversationId,
+          senderId,
+          whatsappNumber,
+        });
 
         console.log("Texte envoyé avec succès :", res.data);
         toast.success("Message envoyé avec succès");
@@ -273,7 +263,10 @@ const ChatbootContainer: React.FC = () => {
                   }`}
                 >
                   <Avatar>
-                    <AvatarImage src={logo} className="w-10 h-10" />
+                    <AvatarImage
+                      src="../src/asset/logo.png"
+                      className="w-10 h-10"
+                    />
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
                   <div className="ml-3 flex-1">
@@ -284,7 +277,10 @@ const ChatbootContainer: React.FC = () => {
                       {contact.message}
                     </p>
                   </div>
-                  <div className="text-sm text-gray-500  absolute right-4">
+                  <div
+                    className="text-sm text-gray-500  absolute right-8
+               "
+                  >
                     {contact.time}
                   </div>
                   {contact.unreadCount > 0 && (
@@ -301,7 +297,10 @@ const ChatbootContainer: React.FC = () => {
             <div className="flex-1 border rounded-md flex flex-col">
               <div className="p-4 border-b flex items-center">
                 <Avatar>
-                  <AvatarImage src={logo} className="w-10 h-10" />
+                  <AvatarImage
+                    src="../src/asset/logo.png"
+                    className="w-10 h-10"
+                  />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
                 <div className="ml-3">
