@@ -205,7 +205,7 @@ const ChatbootContainer: React.FC = () => {
         });
 
         if (trimmedInput) {
-          formData.append("caption", trimmedInput); // facultatif
+          formData.append("caption", trimmedInput);
         }
         if (!whatsappNumber || !conversationId) {
           alert("Erreur: Le numéro WhatsApp ou la conversation est manquante");
