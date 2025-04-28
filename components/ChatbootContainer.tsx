@@ -1,3 +1,5 @@
+import { io } from "socket.io-client";
+
 // ChatbootContainer.tsx (version corrigée)
 import LayoutSystem from "./share/LayoutSystem";
 import { ScrollArea } from "../components/ui/scroll-area";
@@ -76,6 +78,66 @@ const ChatbootContainer: React.FC = () => {
   const removeImage = (index: number) => {
     setImages((prev) => prev.filter((_, i) => i !== index));
   };
+
+  useEffect(() => {
+    const socket = io("https://chat-boot-92e040193633.herokuapp.com");
+
+    socket.on("new_message", (data) => {
+      console.log("Nouveau message reçu :", data);
+
+      // ➔ 1. Ajouter le nouveau message dans la discussion ouverte
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        {
+          id: data.id,
+          sender: data.senderId === "+15551443267" ? "user" : "bot",
+          text: data.content,
+          images: data.imagePath
+            ? [`https://chat-boot-92e040193633.herokuapp.com${data.imagePath}`]
+            : undefined,
+        },
+      ]);
+
+      // ➔ 2. Mettre à jour les contacts
+      setContacts((prevContacts) => {
+        const existingContactIndex = prevContacts.findIndex(
+          (c) => c.senderId === data.senderId
+        );
+
+        if (existingContactIndex !== -1) {
+          // Si le contact existe, on met juste à jour son dernier message
+          const updatedContacts = [...prevContacts];
+          updatedContacts[existingContactIndex] = {
+            ...updatedContacts[existingContactIndex],
+            message: data.content,
+            time: new Date().toLocaleTimeString(), // tu peux aussi utiliser data.timestamp si tu le reçois
+            unreadCount:
+              selectedContact?.phoneNumber === data.senderId
+                ? 0 // Si on est dans la conversation ouverte ➔ pas de "unread"
+                : (updatedContacts[existingContactIndex].unreadCount || 0) + 1,
+          };
+          return updatedContacts;
+        } else {
+          // Sinon, c'est un tout nouveau contact
+          return [
+            {
+              id: data.conversationId?.toString() || Date.now().toString(),
+              senderId: data.senderId,
+              phoneNumber: data.senderId,
+              message: data.content,
+              time: new Date().toLocaleTimeString(),
+              unreadCount: 1,
+            },
+            ...prevContacts, // ➔ on ajoute au début
+          ];
+        }
+      });
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [selectedContact]);
 
   const openChat = async (contact: Contact) => {
     setSelectedContact(contact);
