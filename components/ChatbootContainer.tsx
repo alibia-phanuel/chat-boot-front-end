@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import React from "react";
 import { toast } from "react-toastify";
 import avatar from "../public/assets/ppone.png";
+import formatGabonNumberSmart from "../utils/formatGabonNumberSmart";
 interface Contact {
   senderId: string;
   id: string;
@@ -187,9 +188,10 @@ const ChatbootContainer: React.FC = () => {
   const sendMessage = async () => {
     const trimmedInput = input.trim();
     const recipientNumber = selectedContact?.phoneNumber;
+    const recipientNumberFormat = formatGabonNumberSmart(recipientNumber);
     const conversationId = selectedContact?.id;
     const senderId = "+15551443267";
-    const whatsappNumber = recipientNumber;
+    const whatsappNumber = recipientNumberFormat;
 
     if (!whatsappNumber || !conversationId) {
       alert("Erreur: Le numéro ou la conversation est manquante");
@@ -303,10 +305,7 @@ const ChatbootContainer: React.FC = () => {
             <div className="flex-1 border rounded-md flex flex-col">
               <div className="p-4 border-b flex items-center">
                 <Avatar>
-                  <AvatarImage
-                    src="../src/asset/logo.png"
-                    className="w-10 h-10"
-                  />
+                  <AvatarImage src={avatar} className="w-10 h-10" />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
                 <div className="ml-3">
