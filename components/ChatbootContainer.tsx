@@ -26,6 +26,7 @@ interface Message {
   text: string;
   images?: string[];
   temp?: boolean;
+  timestamp: string; // Nouvelle propriété
 }
 
 const ChatbootContainer: React.FC = () => {
@@ -89,6 +90,7 @@ const ChatbootContainer: React.FC = () => {
           id: data.id,
           sender: data.senderId === "+15551443267" ? "user" : "bot",
           text: data.content,
+          timestamp: new Date().toISOString(), // Ajoutez ceci avec la valeur appropriée
           images: data.imagePath
             ? [`https://chat-boot-92e040193633.herokuapp.com${data.imagePath}`]
             : undefined,
@@ -137,8 +139,11 @@ const ChatbootContainer: React.FC = () => {
   }, [selectedContact]);
 
   const openChat = async (contact: Contact) => {
-    setSelectedContact(contact);
-    contact.unreadCount = 0;
+    // Mettre à jour l'état de manière immuable
+    setContacts((prev) =>
+      prev.map((c) => (c.id === contact.id ? { ...c, unreadCount: 0 } : c))
+    );
+    setSelectedContact({ ...contact, unreadCount: 0 });
     console.log(selectedContact?.phoneNumber);
     // alert(selectedContact?.id);
     const currentUserId = "+15551443267";
@@ -162,6 +167,7 @@ const ChatbootContainer: React.FC = () => {
             id: msg.id,
             sender: isUser ? "user" : "bot",
             text: msg.content,
+            timestamp: new Date(msg.timestamp).toISOString(), // Ajoutez ici aussi
             images: msg.imagePath
               ? [
                   isUser
@@ -278,7 +284,10 @@ const ChatbootContainer: React.FC = () => {
                     className="text-sm text-gray-500  absolute right-8
                "
                   >
-                    {contact.time}
+                    {new Date(contact.time).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
                   </div>
                   {contact.unreadCount > 0 && (
                     <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
