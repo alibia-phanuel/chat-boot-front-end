@@ -140,8 +140,12 @@ const ChatbootContainer: React.FC = () => {
   }, [selectedContact]);
 
   const openChat = async (contact: Contact) => {
+    // ➔ Reset unreadCount via setContacts
+    setContacts((prev) =>
+      prev.map((c) => (c.id === contact.id ? { ...c, unreadCount: 0 } : c))
+    );
     setSelectedContact(contact);
-    contact.unreadCount = 0;
+    // contact.unreadCount = 0;
     console.log(selectedContact?.phoneNumber);
     // alert(selectedContact?.id);
     const currentUserId = "+15551443267";
