@@ -189,9 +189,13 @@ const ChatbootContainer: React.FC = () => {
     const trimmedInput = input.trim();
     const recipientNumber = selectedContact?.phoneNumber;
     const recipientNumberFormat = formatGabonNumberSmart(recipientNumber);
+    const cleanedNumber = recipientNumberFormat.startsWith("+")
+      ? recipientNumberFormat.substring(1)
+      : recipientNumberFormat;
+    alert(cleanedNumber);
     const conversationId = selectedContact?.id;
     const senderId = "+15551443267";
-    const whatsappNumber = recipientNumberFormat;
+    const whatsappNumber = cleanedNumber;
 
     if (!whatsappNumber || !conversationId) {
       alert("Erreur: Le numéro ou la conversation est manquante");
@@ -225,7 +229,7 @@ const ChatbootContainer: React.FC = () => {
         formData.append("conversationId", conversationId);
 
         const res = await axios.post(
-          "http://localhost:3000/send-media",
+          "https://chat-boot-92e040193633.herokuapp.com/send-media",
           formData,
           {
             headers: {
@@ -238,13 +242,16 @@ const ChatbootContainer: React.FC = () => {
         toast.success("Message envoyé avec succès");
       } else {
         // ✅ Ici on sait que trimmedInput est non vide
-        const res = await axios.post("http://localhost:3000/send-text", {
-          to: whatsappNumber,
-          message: trimmedInput,
-          conversationId,
-          senderId,
-          whatsappNumber,
-        });
+        const res = await axios.post(
+          "https://chat-boot-92e040193633.herokuapp.com/send-text",
+          {
+            to: whatsappNumber,
+            message: trimmedInput,
+            conversationId,
+            senderId,
+            whatsappNumber,
+          }
+        );
 
         console.log("Texte envoyé avec succès :", res.data);
         toast.success("Message envoyé avec succès");
