@@ -192,7 +192,6 @@ const ChatbootContainer: React.FC = () => {
     const cleanedNumber = recipientNumberFormat.startsWith("+")
       ? recipientNumberFormat.substring(1)
       : recipientNumberFormat;
-    alert(cleanedNumber);
     const conversationId = selectedContact?.id;
     const senderId = "+15551443267";
     const whatsappNumber = cleanedNumber;
@@ -293,10 +292,7 @@ const ChatbootContainer: React.FC = () => {
                     className="text-sm text-gray-500  absolute right-8
                "
                   >
-                    {new Date(contact.time).toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
+                    {contact.time}
                   </div>
                   {contact.unreadCount > 0 && (
                     <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
