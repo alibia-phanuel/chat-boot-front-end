@@ -253,7 +253,7 @@ const ChatbootContainer: React.FC = () => {
           }
         );
 
-        console.log("Texte envoyé avec succès :", res.data);
+        console.log("Texte envoyé avec succès ", res.data);
         toast.success("Message envoyé avec succès");
       }
 
