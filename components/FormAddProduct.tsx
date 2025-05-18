@@ -14,7 +14,9 @@ const FormAddProduct = () => {
   const [shippingFee, setShippingFee] = useState("");
   const [questions, setQuestions] = useState("");
   const [images, setImages] = useState<File[]>([]);
-
+  const [ordreEnvoi, setOrdreEnvoi] = useState<"text-first" | "images-first">(
+    "text-first"
+  );
   const handleDrop = (acceptedFiles: File[]) => {
     if (images.length + acceptedFiles.length > 4) return;
     setImages((prevImages) => [...prevImages, ...acceptedFiles]);
@@ -33,8 +35,8 @@ const FormAddProduct = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!name || !price || !productId || !shippingFee || !questions) {
+    setPrice("10000");
+    if (!name || !productId || !shippingFee || !questions || !ordreEnvoi) {
       toast.error("Tous les champs sont requis !");
       return;
     }
@@ -57,7 +59,10 @@ const FormAddProduct = () => {
     formData.append("productIdOrKeyword", productId);
     formData.append("shippingFee", shippingFee);
     formData.append("extraQuestions", questions);
-
+    formData.append("ordreEnvoi", ordreEnvoi);
+    for (const [key, value] of formData.entries()) {
+      console.log(`${key}:`, value);
+    }
     if (!userid) {
       toast.error("L'utilisateur doit être défini !");
     }
@@ -78,7 +83,6 @@ const FormAddProduct = () => {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-
       if (response.status === 201) {
         toast.success("Produit ajouté avec succès !");
       }
@@ -115,36 +119,79 @@ const FormAddProduct = () => {
                       onChange={(e) => setProductId(e.target.value)}
                     />
                     <input
-                      className=" border p-2 rounded w-[100%]"
+                      className=" border p-2 rounded w-[100%] hidden"
                       type="number"
                       placeholder="Prix"
-                      value={price}
+                      value="0000"
                       onChange={(e) => setPrice(e.target.value)}
                     />
                   </div>
-                  <div className="w-full  flex justify-center items-center gap-4">
-                    <input
-                      className=" border p-2 rounded w-[100%]"
-                      type="text"
-                      placeholder="Nom du produit"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                    />
-                    <input
-                      className=" border p-2 rounded w-[100%]"
-                      type="number"
-                      placeholder="Frais de livraison"
-                      value={shippingFee}
-                      onChange={(e) => setShippingFee(e.target.value)}
-                    />
-                  </div>
-                  <textarea
-                    className="w-[100%] border p-2 rounded"
-                    placeholder="Questions supplémentaires"
-                    value={questions}
-                    onChange={(e) => setQuestions(e.target.value)}
-                  ></textarea>
 
+                  <div className="w-full flex flex-col gap-2">
+                    <label className="text-sm font-semibold text-gray-800  ">
+                      Caption ("le caption sera affiché en bas de l'image mais
+                      coller a l'image")
+                    </label>
+                    <div className="w-full  my-4 flex justify-center items-center gap-4">
+                      <div className="w-full flex flex-col">
+                        <input
+                          className="border p-2 rounded w-full"
+                          type="text"
+                          placeholder="Nom du produit"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                        />
+                      </div>
+                      <div className="w-full flex flex-col">
+                        <input
+                          className="border p-2 rounded w-full"
+                          type="number"
+                          placeholder="Frais de livraison"
+                          value={shippingFee}
+                          onChange={(e) => setShippingFee(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="w-full flex flex-col gap-2">
+                    <label className="text-sm font-semibold text-gray-800   w-full">
+                      Texte long ("le texte long sera affiché en bas de l'image
+                      mais decoler de l'image")
+                    </label>
+                    <textarea
+                      className="w-[100%]  my-4 border p-2 rounded"
+                      placeholder="Texte supplémentaires"
+                      value={questions}
+                      onChange={(e) => setQuestions(e.target.value)}
+                    ></textarea>
+                  </div>
+                  <div className="w-full flex flex-col gap-2">
+                    <p className="font-semibold mb-2  text-center">
+                      Ordre d’envoi du message WhatsApp
+                    </p>
+                    <div className="flex gap-4  justify-center items-center ">
+                      <label className="flex items-center gap-2">
+                        <input
+                          type="radio"
+                          name="ordreEnvoi"
+                          value="text-first"
+                          checked={ordreEnvoi === "text-first"}
+                          onChange={() => setOrdreEnvoi("text-first")}
+                        />
+                        Texte d’abord
+                      </label>
+                      <label className="flex items-center gap-2">
+                        <input
+                          type="radio"
+                          name="ordreEnvoi"
+                          value="images-first"
+                          checked={ordreEnvoi === "images-first"}
+                          onChange={() => setOrdreEnvoi("images-first")}
+                        />
+                        Images d’abord
+                      </label>
+                    </div>
+                  </div>
                   {/* Upload d'images */}
                   <div
                     {...getRootProps()}
@@ -167,7 +214,7 @@ const FormAddProduct = () => {
                         <button
                           title="Supprimer l'image"
                           type="button"
-                          className="absolute top-1 right-1 text-white p-1 bg-red-500  rounded-full"
+                          className="absolute top-1 right-1 text-white p-1  rounded-full"
                           onClick={() => removeImage(image.name)}
                         >
                           <FiTrash2
