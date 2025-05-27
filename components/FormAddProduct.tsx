@@ -1,241 +1,259 @@
-import LayoutSystem from "./share/LayoutSystem";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useDropzone } from "react-dropzone";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { FiTrash2 } from "react-icons/fi";
+import LayoutSystem from "./share/LayoutSystem";
 import Layout from "./pages/Layout";
 import "react-toastify/dist/ReactToastify.css";
+
+type ImageType = {
+  file: File;
+  caption: string;
+};
+
+const MAX_IMAGES = 10;
+const MAX_TEXT_FIELDS = 5;
+
 const FormAddProduct = () => {
   const userid = localStorage.getItem("authId");
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
   const [productId, setProductId] = useState("");
-  const [shippingFee, setShippingFee] = useState("");
-  const [questions, setQuestions] = useState("");
-  const [images, setImages] = useState<File[]>([]);
   const [ordreEnvoi, setOrdreEnvoi] = useState<"text-first" | "images-first">(
     "text-first"
   );
-  const handleDrop = (acceptedFiles: File[]) => {
-    if (images.length + acceptedFiles.length > 4) return;
-    setImages((prevImages) => [...prevImages, ...acceptedFiles]);
-  };
+  const [images, setImages] = useState<ImageType[]>([]);
+  const [textFields, setTextFields] = useState<string[]>(
+    Array(MAX_TEXT_FIELDS).fill("")
+  );
+
+  // Dropzone
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      if (images.length + acceptedFiles.length > MAX_IMAGES) {
+        toast.error(`Maximum ${MAX_IMAGES} images autorisées.`);
+        return;
+      }
+      const newImages = acceptedFiles.map((file) => ({ file, caption: "" }));
+      setImages((prev) => [...prev, ...newImages]);
+    },
+    [images]
+  );
 
   const { getRootProps, getInputProps } = useDropzone({
-    onDrop: handleDrop,
+    onDrop,
     accept: { "image/*": [] },
     multiple: true,
-    maxFiles: 4,
+    maxFiles: MAX_IMAGES,
   });
 
-  const removeImage = (imageName: string) => {
-    setImages(images.filter((img) => img.name !== imageName));
+  // Supprimer une image
+  const removeImage = (index: number) => {
+    setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
+  // Modifier caption
+  const updateCaption = (index: number, caption: string) => {
+    setImages((prev) =>
+      prev.map((img, i) => (i === index ? { ...img, caption } : img))
+    );
+  };
+
+  // Modifier champs texte dynamiques
+  const updateTextField = (index: number, value: string) => {
+    setTextFields((prev) => prev.map((t, i) => (i === index ? value : t)));
+  };
+
+  // Drag & drop reorder
+  const onDragEnd = (result: any) => {
+    if (!result.destination) return;
+    const reordered = Array.from(images);
+    const [removed] = reordered.splice(result.source.index, 1);
+    reordered.splice(result.destination.index, 0, removed);
+    setImages(reordered);
+  };
+
+  // Submit du formulaire
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setPrice("10000");
-    if (!name || !productId || !shippingFee || !questions || !ordreEnvoi) {
-      toast.error("Tous les champs sont requis !");
-      return;
-    }
 
-    if (isNaN(Number(price)) || isNaN(Number(shippingFee))) {
-      toast.error(
-        "Le prix et les frais d'expédition doivent être des nombres !"
-      );
+    if (!ordreEnvoi || !productId) {
+      toast.error("Merci de remplir tous les champs obligatoires.");
       return;
     }
 
     if (images.length === 0) {
-      toast.error("Vous devez ajouter au moins une image !");
+      toast.error("Veuillez ajouter au moins une image.");
       return;
     }
 
     const formData = new FormData();
-    formData.append("name", name);
-    formData.append("price", price);
     formData.append("productIdOrKeyword", productId);
-    formData.append("shippingFee", shippingFee);
-    formData.append("extraQuestions", questions);
     formData.append("ordreEnvoi", ordreEnvoi);
-    for (const [key, value] of formData.entries()) {
-      console.log(`${key}:`, value);
-    }
-    if (!userid) {
-      toast.error("L'utilisateur doit être défini !");
-    }
-    if (userid !== null) {
-      formData.append("createdBy", userid);
-    }
-    images.forEach((image) => {
-      formData.append("images", image); // Assurez-vous que `image.file` est bien un fichier
+    if (userid) formData.append("createdBy", userid);
+
+    images.forEach(({ file, caption }, i) => {
+      formData.append("images", file);
+      formData.append(`captions[${i}]`, caption);
     });
 
-    // console.log("Données envoyées :", Object.fromEntries(formData.entries()));
+    textFields.forEach((text, i) => {
+      if (text.trim() !== "") {
+        formData.append(`textFields[${i}]`, text.trim());
+      }
+    });
 
     try {
       const response = await axios.post(
         "https://chat-boot-92e040193633.herokuapp.com/products",
         formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
       if (response.status === 201) {
         toast.success("Produit ajouté avec succès !");
+        // Optionnel : reset form
       }
     } catch (error) {
-      toast.error("Une erreur est survenue !");
+      toast.error("Erreur lors de l'ajout du produit.");
       console.error(error);
     }
   };
+
   return (
     <Layout>
       <LayoutSystem>
-        <div className="w-full h-[calc(100vh-70px)] bg-gray-50 flex justify-center items-center">
-          <div className="p-6 bg-white rounded-lg w-[55%] max-md:w-full shadow-lg  mx-4">
-            <h1 className="text-2xl font-bold mb-2 text-center">
-              Ajouter un nouveau produit
-            </h1>
+        <div className="max-w-3xl mx-auto p-6 bg-white rounded shadow mt-8">
+          <h1 className="text-2xl font-bold mb-6 text-center">
+            Ajouter un nouveau produit
+          </h1>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+            {/* Champ mot-clé / ID */}
+            <input
+              type="text"
+              placeholder="Mot-clé ou ID du produit"
+              value={productId}
+              onChange={(e) => setProductId(e.target.value)}
+              className="border p-2 rounded"
+              required
+            />
 
-            <div className="text-xl text-gray-600 mb-4 text-center">
-              Ajouter de nouveaux détails sur le produit
+            {/* Choix de l'ordre */}
+            <div className="flex gap-4 justify-center">
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  name="ordreEnvoi"
+                  value="text-first"
+                  checked={ordreEnvoi === "text-first"}
+                  onChange={() => setOrdreEnvoi("text-first")}
+                />
+                Texte d’abord
+              </label>
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  name="ordreEnvoi"
+                  value="images-first"
+                  checked={ordreEnvoi === "images-first"}
+                  onChange={() => setOrdreEnvoi("images-first")}
+                />
+                Images d’abord
+              </label>
             </div>
-            <div className="bg-white rounded-lg">
-              <div className="p-4">
-                <form
-                  className="gap-4 flex flex-wrap flex-col"
-                  onSubmit={handleSubmit}
-                >
-                  {/* Champs de saisie */}
-                  <div className="flex w-full  justify-center items-center gap-4">
-                    <input
-                      className="border p-2 rounded w-[100%]"
-                      type="text"
-                      placeholder="Mot-clé ou ID du produit Facebook"
-                      value={productId}
-                      onChange={(e) => setProductId(e.target.value)}
-                    />
-                    <input
-                      className=" border p-2 rounded w-[100%] hidden"
-                      type="number"
-                      placeholder="Prix"
-                      value="0000"
-                      onChange={(e) => setPrice(e.target.value)}
-                    />
-                  </div>
 
-                  <div className="w-full flex flex-col gap-2">
-                    <label className="text-sm font-semibold text-gray-800  ">
-                      Caption ("le caption sera affiché en bas de l'image mais
-                      coller a l'image")
-                    </label>
-                    <div className="w-full  my-4 flex justify-center items-center gap-4">
-                      <div className="w-full flex flex-col">
-                        <input
-                          className="border p-2 rounded w-full"
-                          type="text"
-                          placeholder="Nom du produit"
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
-                        />
-                      </div>
-                      <div className="w-full flex flex-col">
-                        <input
-                          className="border p-2 rounded w-full"
-                          type="number"
-                          placeholder="Frais de livraison"
-                          value={shippingFee}
-                          onChange={(e) => setShippingFee(e.target.value)}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="w-full flex flex-col gap-2">
-                    <label className="text-sm font-semibold text-gray-800   w-full">
-                      Texte long ("le texte long sera affiché en bas de l'image
-                      mais decoler de l'image")
-                    </label>
-                    <textarea
-                      className="w-[100%]  my-4 border p-2 rounded"
-                      placeholder="Texte supplémentaires"
-                      value={questions}
-                      onChange={(e) => setQuestions(e.target.value)}
-                    ></textarea>
-                  </div>
-                  <div className="w-full flex flex-col gap-2">
-                    <p className="font-semibold mb-2  text-center">
-                      Ordre d’envoi du message WhatsApp
-                    </p>
-                    <div className="flex gap-4  justify-center items-center ">
-                      <label className="flex items-center gap-2">
-                        <input
-                          type="radio"
-                          name="ordreEnvoi"
-                          value="text-first"
-                          checked={ordreEnvoi === "text-first"}
-                          onChange={() => setOrdreEnvoi("text-first")}
-                        />
-                        Texte d’abord
-                      </label>
-                      <label className="flex items-center gap-2">
-                        <input
-                          type="radio"
-                          name="ordreEnvoi"
-                          value="images-first"
-                          checked={ordreEnvoi === "images-first"}
-                          onChange={() => setOrdreEnvoi("images-first")}
-                        />
-                        Images d’abord
-                      </label>
-                    </div>
-                  </div>
-                  {/* Upload d'images */}
-                  <div
-                    {...getRootProps()}
-                    className="border-2 border-dashed p-4 w-full text-center cursor-pointer"
-                  >
-                    <input {...getInputProps()} />
-                    <p>
-                      Glissez-déposez vos images ici, ou cliquez pour
-                      sélectionner
-                    </p>
-                  </div>
-                  <div className="flex justify-evenly mt-6">
-                    {images.map((image) => (
-                      <div key={image.name} className="relative">
-                        <img
-                          src={URL.createObjectURL(image)}
-                          alt={image.name}
-                          className="w-20 h-20 object-cover rounded"
-                        />
-                        <button
-                          title="Supprimer l'image"
-                          type="button"
-                          className="absolute top-1 right-1 text-white p-1  rounded-full"
-                          onClick={() => removeImage(image.name)}
-                        >
-                          <FiTrash2
-                            size={16}
-                            className="text-red-100  rounded-full "
-                          />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
-                  >
-                    Sauvegarder le produit
-                  </button>
-                </form>
+            {/* Zone d'upload */}
+            <div>
+              <div
+                {...getRootProps()}
+                className="border-2 border-dashed p-6 text-center cursor-pointer"
+              >
+                <input {...getInputProps()} />
+                <p>
+                  Glissez-déposez vos images ici ou cliquez pour sélectionner
+                </p>
+                <p className="text-sm text-gray-500 mt-2">
+                  Maximum {MAX_IMAGES} images
+                </p>
               </div>
+
+              {/* Aperçu + drag&drop */}
+              <DragDropContext onDragEnd={onDragEnd}>
+                <Droppable droppableId="images" direction="horizontal">
+                  {(provided) => (
+                    <div
+                      className="flex gap-4 mt-4 overflow-x-auto"
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                    >
+                      {images.map(({ file, caption }, index) => (
+                        <Draggable
+                          key={file.name}
+                          draggableId={file.name}
+                          index={index}
+                        >
+                          {(provided) => (
+                            <div
+                              className="relative w-40 flex-shrink-0"
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                            >
+                              <img
+                                src={URL.createObjectURL(file)}
+                                alt={file.name}
+                                className="w-full h-32 object-cover rounded"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => removeImage(index)}
+                                className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1"
+                                title="Supprimer l'image"
+                              >
+                                <FiTrash2 size={16} />
+                              </button>
+                              <textarea
+                                placeholder="Caption pour cette image"
+                                value={caption}
+                                onChange={(e) =>
+                                  updateCaption(index, e.target.value)
+                                }
+                                className="mt-2 border p-1 rounded w-full resize-y"
+                                rows={3}
+                              />
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </DragDropContext>
             </div>
-          </div>
+
+            {/* Champs texte dynamiques */}
+            <div className="flex flex-col gap-3">
+              <h2 className="font-semibold">Champs texte supplémentaires</h2>
+              {textFields.map((text, i) => (
+                <textarea
+                  key={i}
+                  placeholder={`Texte ${i + 1}`}
+                  value={text}
+                  onChange={(e) => updateTextField(i, e.target.value)}
+                  className="border p-2 rounded w-full resize-y"
+                  rows={4}
+                />
+              ))}
+            </div>
+
+            {/* Soumission */}
+            <button
+              type="submit"
+              className="bg-green-600 text-white p-3 rounded hover:bg-green-700 transition"
+            >
+              Sauvegarder le produit
+            </button>
+          </form>
         </div>
       </LayoutSystem>
     </Layout>
